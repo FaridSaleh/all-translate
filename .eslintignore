@@ -1,0 +1,10 @@
+babel.config.js
+jest.config.js
+metro.config.js
+tailwind.config.js
+postcss.config.js
+react-native.config.js
+commitlint.config.js
+
+**/*.config.js
+**/*.config.ts

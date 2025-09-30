@@ -1,7 +1,8 @@
 import { StatusBar, useColorScheme } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
-import AppContent from '@/screens'
+import AppNavigator from '@/screens'
 import '@/i18n'
+import 'react-native-gesture-handler'
 import './global.css'
 
 function App() {
@@ -10,7 +11,7 @@ function App() {
   return (
     <SafeAreaProvider>
       <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-      <AppContent />
+      <AppNavigator />
     </SafeAreaProvider>
   )
 }
