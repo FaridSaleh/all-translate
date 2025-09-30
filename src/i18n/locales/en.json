@@ -1,3 +1,7 @@
 {
-  "AllTranslate": "All Translate"
+  "SplashScreen": {
+    "title": "All Translate",
+    "subtitle": "AI Voice, Photo & Text Translator",
+    "description": "Translate photos, text & real-time voice – instantly"
+  }
 }
