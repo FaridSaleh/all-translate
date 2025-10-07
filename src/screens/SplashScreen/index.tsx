@@ -3,16 +3,32 @@ import { useTranslation } from 'react-i18next'
 import { Image, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
 import SplashScreenProps from './type'
+import { useGetTokenRequest } from '@/apis/auth/getToken'
+import { setTokenSecure } from '@/store/auth'
+import { useConfiguration } from '@/apis/configuration'
+import useConfigurationStore from '@/store/configuration'
 
 function SplashScreen({ navigation }: SplashScreenProps) {
   const { t } = useTranslation()
+  const { mutate: getToken } = useGetTokenRequest()
+  const { mutate: getConfiguration } = useConfiguration()
+  const { setConfiguration } = useConfigurationStore()
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      navigation.replace('Home')
-    }, 2000)
-
-    return () => clearTimeout(timer)
+    getToken(
+      { userId: 'b4bcdb29-71cd-4c8d-a461-b34bb48cb23e' },
+      {
+        onSuccess: async tokenData => {
+          await setTokenSecure(tokenData)
+          getConfiguration(undefined, {
+            onSuccess: configurationData => {
+              setConfiguration(configurationData)
+              navigation.replace('Home')
+            },
+          })
+        },
+      },
+    )
   }, [])
 
   return (

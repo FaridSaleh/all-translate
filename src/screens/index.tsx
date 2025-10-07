@@ -4,12 +4,13 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import HomeScreen from './HomeScreen'
 import { RootStackParamList } from './type'
 import SplashScreen from './SplashScreen'
+import { navigationRef } from './helper'
 
 const Stack = createNativeStackNavigator<RootStackParamList>()
 
 function RootNavigator() {
   return (
-    <NavigationContainer>
+    <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
         <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
