@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useTranslation } from 'react-i18next'
 import { Image, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
@@ -10,11 +10,15 @@ import useConfigurationStore from '@/store/configuration'
 
 function SplashScreen({ navigation }: SplashScreenProps) {
   const { t } = useTranslation()
+  const [splashMessage, setSplashMessage] = useState<string>()
+
   const { mutate: getToken } = useGetTokenRequest()
   const { mutate: getConfiguration } = useConfiguration()
-  const { setConfiguration } = useConfigurationStore()
+  const { configuration, setConfiguration, nextSplashMessageId, setNextSplashMessageId } =
+    useConfigurationStore()
 
   useEffect(() => {
+    getSplashMessage()
     getToken(
       { userId: 'b4bcdb29-71cd-4c8d-a461-b34bb48cb23e' },
       {
@@ -31,6 +35,19 @@ function SplashScreen({ navigation }: SplashScreenProps) {
     )
   }, [])
 
+  const getSplashMessage = () => {
+    const messageIndex =
+      configuration?.splashMessages.findIndex(item => item.id === nextSplashMessageId) ?? 0
+    setNextSplashMessageId(
+      messageIndex + 1 < (configuration?.splashMessages.length ?? 0)
+        ? (configuration?.splashMessages[messageIndex + 1]?.id ?? null)
+        : (configuration?.splashMessages[0]?.id ?? null),
+    )
+    setSplashMessage(
+      configuration?.splashMessages[messageIndex]?.message ?? t('SplashScreen.description'),
+    )
+  }
+
   return (
     <LinearGradient
       colors={['#D2E5FF', '#F4F8FF', '#FFFFFF']}
@@ -39,11 +56,20 @@ function SplashScreen({ navigation }: SplashScreenProps) {
       end={{ x: 0, y: 1 }}
     >
       <View className="w-screen h-screen">
-        <View className="flex-1 items-center justify-evenly">
+        <View className="flex-1 items-center justify-evenly px-4">
           <View className="items-center gap-4">
-            <Text className="text-[32px] font-bold text-text-primary">
-              {t('SplashScreen.title')}
-            </Text>
+            <View className="flex-row items-start gap-1.5">
+              <Text className="text-[32px] font-bold text-text-primary">
+                {t('SplashScreen.title')}
+              </Text>
+              <Text>
+                {configuration?.user.tire === 'Premium' && (
+                  <View className="bg-bg-badgeProBg rounded-lg px-2 py-1">
+                    <Text className="font-bold text-[15px] text-text-onPrimary">PRO</Text>
+                  </View>
+                )}
+              </Text>
+            </View>
             <Text className="text-[20px] font-bold text-text-primary">
               {t('SplashScreen.subtitle')}
             </Text>
@@ -58,8 +84,8 @@ function SplashScreen({ navigation }: SplashScreenProps) {
             <View className="w-[42px] h-[42px] rounded-full bg-primary-light" />
             <View className="w-[62px] h-[62px] rounded-full bg-primary-light" />
           </View>
-          <Text className="text-[14px] font-medium text-text-primary">
-            {t('SplashScreen.description')}
+          <Text className="text-[14px] font-medium text-text-primary text-center">
+            {splashMessage}
           </Text>
         </View>
       </View>

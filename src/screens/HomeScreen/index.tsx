@@ -7,7 +7,7 @@ function HomeScreen({ navigation }: HomeScreenProps) {
   console.log('🚀 ~ HomeScreen ~ navigation:', navigation)
 
   return (
-    <SafeAreaView className="flex-1">
+    <SafeAreaView className="flex-1 p-4 gap-4 bg-bg-card">
       <Text className="text-[32px] font-bold text-text-primary">Home Screen</Text>
     </SafeAreaView>
   )
