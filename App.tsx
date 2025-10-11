@@ -1,6 +1,7 @@
 import { StatusBar, useColorScheme, LogBox } from 'react-native'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { QueryClientProvider } from '@tanstack/react-query'
+import { GestureHandlerRootView } from 'react-native-gesture-handler'
 import AppNavigator from '@/screens'
 import '@/i18n'
 import './global.css'
@@ -13,10 +14,12 @@ function App() {
 
   return (
     <SafeAreaProvider>
-      <QueryClientProvider client={queryClient}>
-        <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
-        <AppNavigator />
-      </QueryClientProvider>
+      <GestureHandlerRootView className="flex-1">
+        <QueryClientProvider client={queryClient}>
+          <StatusBar barStyle={isDarkMode ? 'light-content' : 'dark-content'} />
+          <AppNavigator />
+        </QueryClientProvider>
+      </GestureHandlerRootView>
     </SafeAreaProvider>
   )
 }
