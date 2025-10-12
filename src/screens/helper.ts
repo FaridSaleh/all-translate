@@ -3,8 +3,8 @@ import {
   createNavigationContainerRef,
   useNavigation,
 } from '@react-navigation/native'
-import { RootStackParamList } from './type'
 import { NativeStackNavigationProp } from '@react-navigation/native-stack'
+import { RootStackParamList } from './type'
 
 export const navigationRef = createNavigationContainerRef<RootStackParamList>()
 

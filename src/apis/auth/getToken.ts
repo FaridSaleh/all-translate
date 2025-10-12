@@ -1,6 +1,6 @@
-import { postRequest } from '@/utils/api'
 import { useMutation } from '@tanstack/react-query'
 import { UserTier } from '../common'
+import { postRequest } from '@/utils/api'
 
 export const POST_GET_TOKEN_URL = '/api/Auth/getToken'
 

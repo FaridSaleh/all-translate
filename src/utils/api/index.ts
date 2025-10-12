@@ -1,11 +1,11 @@
-import axios, { AxiosError, AxiosRequestConfig } from 'axios'
-import useConfigurationStore from '@/store/configuration'
-import { redirectToSplash, getCurrentRouteName } from '@/screens/helper'
 import { Alert } from 'react-native'
-import { buildUserAgent } from '@/utils/appInfo'
-import { getTokenSecure } from '@/store/auth'
+import axios, { AxiosError, AxiosRequestConfig } from 'axios'
 import { POST_GET_TOKEN_URL } from '@/apis/auth/getToken'
 import { GET_CONFIGURATION_URL } from '@/apis/configuration'
+import { redirectToSplash, getCurrentRouteName } from '@/screens/helper'
+import { getTokenSecure } from '@/store/auth'
+import useConfigurationStore from '@/store/configuration'
+import { buildUserAgent } from '@/utils/appInfo'
 
 export const api = axios.create({
   timeout: 15000,

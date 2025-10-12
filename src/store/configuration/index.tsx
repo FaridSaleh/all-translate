@@ -1,5 +1,5 @@
-import { createJSONStorage, persist } from 'zustand/middleware'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { createJSONStorage, persist } from 'zustand/middleware'
 import { ConfigurationDto } from '@/apis/configuration'
 import { create } from '@/store'
 

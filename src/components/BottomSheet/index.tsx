@@ -1,6 +1,6 @@
 import { useCallback, useRef } from 'react'
-import GBottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
+import GBottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import BottomSheetProps from './type'
 
 const BottomSheet = ({ children, isOpen, setIsOpen }: BottomSheetProps) => {

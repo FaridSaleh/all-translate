@@ -1,8 +1,8 @@
 import React from 'react'
-import { RetryErrorIcon } from '@/assets'
-import { Modal } from '@/components'
 import { Pressable, Text, View } from 'react-native'
 import { ForceUpdateModalProps } from './type'
+import { RetryErrorIcon } from '@/assets'
+import { Modal } from '@/components'
 import { useAppNavigation } from '@/screens/helper'
 
 const ForceUpdateModal = ({

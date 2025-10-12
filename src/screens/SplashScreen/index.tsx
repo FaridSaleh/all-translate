@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react'
-import { useTranslation } from 'react-i18next'
 import { Image, Text, View } from 'react-native'
 import LinearGradient from 'react-native-linear-gradient'
-import { useGetTokenRequest } from '@/apis/auth/getToken'
-import { setTokenSecure } from '@/store/auth'
-import { useConfiguration } from '@/apis/configuration'
-import useConfigurationStore from '@/store/configuration'
-import ForceUpdateModal from './components/ForceUpdateModal'
+import { useTranslation } from 'react-i18next'
 import { useAppNavigation } from '../helper'
+import ForceUpdateModal from './components/ForceUpdateModal'
+import { useGetTokenRequest } from '@/apis/auth/getToken'
+import { useConfiguration } from '@/apis/configuration'
+import { setTokenSecure } from '@/store/auth'
+import useConfigurationStore from '@/store/configuration'
 
 function SplashScreen() {
   const navigation = useAppNavigation()

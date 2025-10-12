@@ -1,6 +1,6 @@
 import { useMutation } from '@tanstack/react-query'
-import { getRequest } from '@/utils/api'
 import { UserTier } from '../common'
+import { getRequest } from '@/utils/api'
 
 export const GET_CONFIGURATION_URL = '/api/Configuration'
 

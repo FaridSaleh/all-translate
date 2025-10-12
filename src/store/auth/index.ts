@@ -1,5 +1,5 @@
-import { GetTokenDto } from '@/apis/auth/getToken'
 import EncryptedStorage from 'react-native-encrypted-storage'
+import { GetTokenDto } from '@/apis/auth/getToken'
 
 const TOKEN_KEY = 'auth_token'
 
