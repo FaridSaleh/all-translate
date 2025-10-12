@@ -13,7 +13,7 @@ function RootNavigator() {
     <NavigationContainer ref={navigationRef}>
       <Stack.Navigator>
         <Stack.Screen name="Splash" component={SplashScreen} options={{ headerShown: false }} />
-        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: false }} />
+        <Stack.Screen name="Home" component={HomeScreen} options={{ headerShown: true }} />
       </Stack.Navigator>
     </NavigationContainer>
   )
