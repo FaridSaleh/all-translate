@@ -8,6 +8,7 @@ import { useGetTokenRequest } from '@/apis/auth/getToken'
 import { useConfiguration } from '@/apis/configuration'
 import { setTokenSecure } from '@/store/auth'
 import useConfigurationStore from '@/store/configuration'
+import createDeviceId from '@/utils/createDeviceId'
 
 function SplashScreen() {
   const navigation = useAppNavigation()
@@ -22,8 +23,9 @@ function SplashScreen() {
 
   useEffect(() => {
     getSplashMessage()
+    const userId = configuration?.user?.id || createDeviceId()
     getToken(
-      { userId: 'b4bcdb29-71cd-4c8d-a461-b34bb48cb23e' },
+      { userId },
       {
         onSuccess: async tokenData => {
           await setTokenSecure(tokenData)

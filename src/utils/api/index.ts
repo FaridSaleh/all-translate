@@ -5,7 +5,7 @@ import { GET_CONFIGURATION_URL } from '@/apis/configuration'
 import { redirectToSplash, getCurrentRouteName } from '@/screens/helper'
 import { getTokenSecure } from '@/store/auth'
 import useConfigurationStore from '@/store/configuration'
-import { buildUserAgent } from '@/utils/appInfo'
+import getUserAgent from '@/utils/getUserAgent'
 
 export const api = axios.create({
   timeout: 15000,
@@ -16,7 +16,7 @@ api.interceptors.request.use(
     const token = await getTokenSecure()
 
     config.headers = config.headers ?? {}
-    ;(config.headers as any)['X-User-Agent'] = buildUserAgent()
+    ;(config.headers as any)['X-User-Agent'] = getUserAgent()
     if (token) {
       ;(config.headers as any).Authorization = `Bearer ${token.token}`
     }

@@ -1,6 +1,6 @@
 import { Platform } from 'react-native'
 
-export function buildUserAgent() {
+export default function getUserAgent() {
   let appVersion = '0.0.1'
   try {
     const pkg = require('../../../package.json')
