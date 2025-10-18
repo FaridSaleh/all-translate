@@ -18,8 +18,13 @@ function SplashScreen() {
 
   const { mutate: getToken } = useGetTokenRequest()
   const { mutate: getConfiguration } = useConfiguration()
-  const { configuration, setConfiguration, nextSplashMessageId, setNextSplashMessageId } =
-    useConfigurationStore()
+  const {
+    configuration,
+    setConfiguration,
+    nextSplashMessageId,
+    setNextSplashMessageId,
+    setHasOptionalUpdate,
+  } = useConfigurationStore()
 
   useEffect(() => {
     getSplashMessage()
@@ -32,6 +37,7 @@ function SplashScreen() {
           getConfiguration(undefined, {
             onSuccess: configurationData => {
               setConfiguration(configurationData)
+              setHasOptionalUpdate(configurationData.optionalUpdate)
               if (configurationData.forceUpdate) {
                 setIsForceUpdateOpen(true)
               } else {
@@ -104,7 +110,6 @@ function SplashScreen() {
       <ForceUpdateModal
         isForceUpdateOpen={isForceUpdateOpen}
         setIsForceUpdateOpen={setIsForceUpdateOpen}
-        configuration={configuration}
       />
     </>
   )

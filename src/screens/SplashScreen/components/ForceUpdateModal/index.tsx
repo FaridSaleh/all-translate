@@ -4,13 +4,12 @@ import { ForceUpdateModalProps } from './type'
 import { RetryErrorIcon } from '@/assets'
 import { Modal } from '@/components'
 import { useAppNavigation } from '@/screens/helper'
+import useConfigurationStore from '@/store/configuration'
 
-const ForceUpdateModal = ({
-  isForceUpdateOpen,
-  setIsForceUpdateOpen,
-  configuration,
-}: ForceUpdateModalProps) => {
+const ForceUpdateModal = ({ isForceUpdateOpen, setIsForceUpdateOpen }: ForceUpdateModalProps) => {
   const navigation = useAppNavigation()
+
+  const { configuration } = useConfigurationStore()
 
   return (
     <Modal isOpen={isForceUpdateOpen} setIsOpen={setIsForceUpdateOpen}>

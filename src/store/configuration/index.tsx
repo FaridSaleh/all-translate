@@ -8,6 +8,8 @@ interface ConfigurationStore {
   setConfiguration: (configuration: ConfigurationDto | null) => void
   nextSplashMessageId: number | null
   setNextSplashMessageId: (nextSplashMessageId: number | null) => void
+  hasOptionalUpdate: boolean
+  setHasOptionalUpdate: (hasOptionalUpdate: boolean) => void
 }
 
 const useConfigurationStore = create<ConfigurationStore>()(
@@ -20,6 +22,10 @@ const useConfigurationStore = create<ConfigurationStore>()(
       nextSplashMessageId: null,
       setNextSplashMessageId: nextSplashMessageId => {
         set({ nextSplashMessageId })
+      },
+      hasOptionalUpdate: false,
+      setHasOptionalUpdate: hasOptionalUpdate => {
+        set({ hasOptionalUpdate })
       },
     }),
     { name: 'CONFIGURATIONS', storage: createJSONStorage(() => AsyncStorage) },
