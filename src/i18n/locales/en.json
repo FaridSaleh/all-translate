@@ -3,5 +3,11 @@
     "title": "All Translate",
     "subtitle": "AI Voice, Photo & Text Translator",
     "description": "Translate photos, text & real-time voice – instantly"
+  },
+  "HomeScreen": {
+    "title": "All Translate",
+    "text_and_voice": "Text & Voice",
+    "conversation": "Conversation",
+    "camera": "Camera"
   }
 }

@@ -73,7 +73,7 @@ function SplashScreen() {
                   {t('SplashScreen.title')}
                 </Text>
                 <Text>
-                  {configuration?.user.tire === 'Premium' && (
+                  {configuration?.user.tire !== 'Free' && (
                     <View className="bg-bg-badgeProBg rounded-lg px-2 py-1">
                       <Text className="font-bold text-[15px] text-text-onPrimary">PRO</Text>
                     </View>
