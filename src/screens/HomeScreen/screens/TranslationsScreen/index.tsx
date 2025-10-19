@@ -9,6 +9,9 @@ import useConfigurationStore from '@/store/configuration'
 const TranslationsScreen = () => {
   const { hasOptionalUpdate } = useConfigurationStore()
   const [isOptionalUpdateOpen, setIsOptionalUpdateOpen] = useState(false)
+  // const [sourceLanguage, setSourceLanguage] = useState('Detect Language')
+  // const [targetLanguage, setTargetLanguage] = useState('Spanish')
+  // const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
 
   const { isListening, isAvailable, results, startListening, stopListening } = useSpeechToText()
 
@@ -37,7 +40,17 @@ const TranslationsScreen = () => {
     <>
       <GradientLayout>
         <View className="flex-1 p-6">
-          <Text className="text-[20px] font-bold text-text-primary">Translations Screen</Text>
+          {/* <View className="bg-bg-card rounded-2xl p-4">
+            <View className="flex-row items-center justify-between">
+              <Pressable
+                className="flex-row items-center gap-1"
+                onPress={() => setIsLanguageModalOpen(true)}
+              >
+                <Text className="text-[14px] font-medium text-text-primary">{sourceLanguage}</Text>
+              </Pressable>
+              <MicrophoneIcon width={20} height={20} color="#000000" />
+            </View>
+          </View> */}
           <View className="items-center">
             <Pressable
               onPress={handlePress}

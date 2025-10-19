@@ -1,6 +1,6 @@
 import { BottomTabHeaderProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useTranslation } from 'react-i18next'
-import Header from '../components/Header'
+import Header from './components/Header'
 import ConversationScreen from './screens/ConversationScreen'
 import ImageScreen from './screens/ImageScreen'
 import TranslationsScreen from './screens/TranslationsScreen'
