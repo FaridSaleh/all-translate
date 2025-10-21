@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
 import { Alert, Pressable, Text, View } from 'react-native'
 import GradientLayout from '../../components/GradientLayout'
+import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
-import { MicrophoneIcon } from '@/assets'
+import { ChevronUpAndDownIcon, MicrophoneIcon } from '@/assets'
 import useSpeechToText from '@/hooks/useSpeechToText'
 import useConfigurationStore from '@/store/configuration'
 
 const TranslationsScreen = () => {
   const { hasOptionalUpdate } = useConfigurationStore()
   const [isOptionalUpdateOpen, setIsOptionalUpdateOpen] = useState(false)
-  // const [sourceLanguage, setSourceLanguage] = useState('Detect Language')
-  // const [targetLanguage, setTargetLanguage] = useState('Spanish')
-  // const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
+  const [sourceLanguage, setSourceLanguage] = useState('Detect Language')
+  const [targetLanguage, setTargetLanguage] = useState('Spanish')
+  const [isLanguageModalOpen, setIsLanguageModalOpen] = useState(false)
 
   const { isListening, isAvailable, results, startListening, stopListening } = useSpeechToText()
 
@@ -40,18 +41,19 @@ const TranslationsScreen = () => {
     <>
       <GradientLayout>
         <View className="flex-1 p-6">
-          {/* <View className="bg-bg-card rounded-2xl p-4">
+          <View className="bg-bg-card rounded-2xl p-4">
             <View className="flex-row items-center justify-between">
               <Pressable
-                className="flex-row items-center gap-1"
+                className="flex-row items-center gap-2"
                 onPress={() => setIsLanguageModalOpen(true)}
               >
                 <Text className="text-[14px] font-medium text-text-primary">{sourceLanguage}</Text>
+                <ChevronUpAndDownIcon width={9} height={13} />
               </Pressable>
               <MicrophoneIcon width={20} height={20} color="#000000" />
             </View>
-          </View> */}
-          <View className="items-center">
+          </View>
+          {/* <View className="items-center">
             <Pressable
               onPress={handlePress}
               disabled={!isAvailable}
@@ -71,13 +73,16 @@ const TranslationsScreen = () => {
                 <Text className="text-sm text-gray-800">{results[0]}</Text>
               </View>
             )}
-          </View>
+          </View> */}
         </View>
       </GradientLayout>
+
       <OptionalUpdateModal
         isOptionalUpdateOpen={isOptionalUpdateOpen}
         setIsOptionalUpdateOpen={setIsOptionalUpdateOpen}
       />
+
+      <LanguageBottomSheet isOpen={isLanguageModalOpen} setIsOpen={setIsLanguageModalOpen} />
     </>
   )
 }
