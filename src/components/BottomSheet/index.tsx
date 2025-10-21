@@ -1,11 +1,11 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useRef, useEffect } from 'react'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
-import GBottomSheet, { BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
+import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import BottomSheetProps from './type'
 
 const BottomSheet = ({ children, isOpen, setIsOpen }: BottomSheetProps) => {
   const insets = useSafeAreaInsets()
-  const bottomSheetRef = useRef<GBottomSheet>(null)
+  const bottomSheetRef = useRef<BottomSheetModal>(null)
 
   const renderBackdrop = useCallback(
     (props: any) => (
@@ -21,18 +21,25 @@ const BottomSheet = ({ children, isOpen, setIsOpen }: BottomSheetProps) => {
     [],
   )
 
+  useEffect(() => {
+    if (isOpen) {
+      bottomSheetRef.current?.present()
+    } else {
+      bottomSheetRef.current?.dismiss()
+    }
+  }, [isOpen])
+
   return (
-    <GBottomSheet
+    <BottomSheetModal
       enableContentPanningGesture={false}
       enableHandlePanningGesture={true}
       enablePanDownToClose={true}
-      onClose={() => setIsOpen(false)}
+      onDismiss={() => setIsOpen(false)}
       ref={bottomSheetRef}
-      index={isOpen ? 0 : -1}
       backdropComponent={renderBackdrop}
     >
       <BottomSheetView style={{ paddingBottom: insets.bottom }}>{children}</BottomSheetView>
-    </GBottomSheet>
+    </BottomSheetModal>
   )
 }
 

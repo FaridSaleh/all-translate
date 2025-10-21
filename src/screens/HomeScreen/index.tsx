@@ -32,6 +32,7 @@ function HomeScreen() {
           marginHorizontal: 20,
           borderTopWidth: 1,
           borderTopColor: '#4B5563',
+          shadowColor: 'transparent',
         },
         header: HeaderComponent,
       }}
