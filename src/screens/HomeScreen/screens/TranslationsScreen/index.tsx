@@ -33,7 +33,7 @@ const TranslationsScreen = () => {
     if (isListening) {
       await stopListening()
     } else {
-      await startListening('en-US')
+      await startListening('en')
     }
   }
 

@@ -9,5 +9,13 @@
     "text_and_voice": "Text & Voice",
     "conversation": "Conversation",
     "camera": "Camera"
+  },
+  "LanguageBottomSheet": {
+    "title": "Select Languages",
+    "done": "Done",
+    "search": "Search",
+    "popular": "Popular",
+    "all": "All",
+    "no_languages_found": "No languages found"
   }
 }

@@ -27,6 +27,10 @@ export interface ConfigurationDto {
     id: number
     message: string
   }>
+  supportedLanguages: Array<{
+    id: string
+    name: string
+  }>
 }
 
 export const getConfiguration = async () =>
