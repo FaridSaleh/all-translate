@@ -1,4 +1,10 @@
+import { LanguageType } from '../../screens/TranslationsScreen/type'
+
 export default interface LanguageBottomSheetProps {
-  isOpen: boolean
-  setIsOpen: (value: boolean) => void
+  open: 'source' | 'target' | false
+  setOpen: (value: 'source' | 'target' | false) => void
+  sourceLanguage: LanguageType
+  setSourceLanguage: (value: LanguageType) => void
+  targetLanguage: LanguageType
+  setTargetLanguage: (value: LanguageType) => void
 }

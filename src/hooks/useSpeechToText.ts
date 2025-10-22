@@ -9,6 +9,7 @@ interface UseSpeechToTextDto {
   startListening: (language: string) => Promise<void>
   stopListening: () => Promise<void>
   reset: () => void
+  isLanguageAvailable: (language: string) => Promise<boolean>
 }
 
 const useSpeechToText = (): UseSpeechToTextDto => {
@@ -68,6 +69,10 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     setError(null)
   }
 
+  const isLanguageAvailable = async (language: string) => {
+    // return await Voice.isLanguageAvailable(language)
+  }
+
   return {
     isListening,
     isAvailable,
@@ -76,6 +81,7 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     startListening,
     stopListening,
     reset,
+    isLanguageAvailable,
   }
 }
 

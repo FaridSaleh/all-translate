@@ -1,41 +1,77 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useEffect } from 'react'
 import { Pressable, Text, View, TextInput, FlatList } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import LanguageBottomSheetProps from './type'
+import { CheckIcon, SearchIcon } from '@/assets'
 import { BottomSheet } from '@/components'
 import useConfigurationStore from '@/store/configuration'
 
-const LanguageBottomSheet = ({ isOpen, setIsOpen }: LanguageBottomSheetProps) => {
+const ItemSeparatorComponent = () => <View className="h-[1px] w-full bg-[#EDEDED]" />
+
+const LanguageBottomSheet = ({
+  open,
+  setOpen,
+  sourceLanguage,
+  setSourceLanguage,
+  targetLanguage,
+  setTargetLanguage,
+}: LanguageBottomSheetProps) => {
   const { t } = useTranslation()
   const { configuration } = useConfigurationStore()
   const [searchQuery, setSearchQuery] = useState('')
+  const [languageType, setLanguageType] = useState<'source' | 'target'>()
 
-  // Filter languages based on search query
+  useEffect(() => {
+    if (open) {
+      setLanguageType(open)
+    }
+  }, [open])
+
   const filteredLanguages = useMemo(() => {
     if (!configuration?.supportedLanguages) return []
 
-    if (!searchQuery.trim()) {
-      return configuration.supportedLanguages
+    let languages = configuration.supportedLanguages
+
+    if (languageType === 'source') {
+      const detectLanguageOption = {
+        id: 'detect',
+        name: t('LanguageBottomSheet.detect_language'),
+      }
+      languages = [detectLanguageOption, ...languages]
     }
 
-    return configuration.supportedLanguages.filter(language =>
+    if (!searchQuery.trim()) {
+      return languages
+    }
+
+    return languages.filter(language =>
       language.name.toLowerCase().includes(searchQuery.toLowerCase()),
     )
-  }, [configuration?.supportedLanguages, searchQuery])
+  }, [configuration?.supportedLanguages, searchQuery, languageType, t])
 
   const handleLanguageSelect = (language: { id: string; name: string }) => {
     console.log('Selected language:', language)
-    // TODO: Handle language selection
-    setIsOpen(false)
+
+    if (languageType === 'source') {
+      setSourceLanguage(language)
+    } else {
+      setTargetLanguage(language)
+    }
   }
 
   return (
-    <BottomSheet isOpen={isOpen} setIsOpen={setIsOpen} height="100%">
+    <BottomSheet
+      isOpen={open ? true : false}
+      setIsOpen={value => setOpen(value as 'source' | 'target' | false)}
+      height="100%"
+    >
       <View className="px-6 py-4 flex-1">
         <View className="w-full flex-row justify-between mb-4">
-          <View />
+          <Text className="text-[14px] font-semibold text-primary-main opacity-0">
+            {t('LanguageBottomSheet.done')}
+          </Text>
           <Text className="text-[16px] font-bold">{t('LanguageBottomSheet.title')}</Text>
-          <Pressable onPress={() => setIsOpen(false)}>
+          <Pressable onPress={() => setOpen(false)}>
             <Text className="text-[14px] font-semibold text-primary-main">
               {t('LanguageBottomSheet.done')}
             </Text>
@@ -43,32 +79,66 @@ const LanguageBottomSheet = ({ isOpen, setIsOpen }: LanguageBottomSheetProps) =>
         </View>
 
         <View className="mb-4">
-          <TextInput
-            className="bg-gray-100 rounded-lg px-4 py-3 text-[14px] bg-[#EEEEEF]"
-            placeholder={t('LanguageBottomSheet.search')}
-            placeholderTextColor="#9CA3AF"
-            value={searchQuery}
-            onChangeText={setSearchQuery}
-            autoCorrect={false}
-            autoCapitalize="none"
-          />
+          <View className="relative">
+            <View className="absolute left-4 top-1/2 -translate-y-1/2 z-10">
+              <SearchIcon width={20} height={20} color="#4B5563" />
+            </View>
+            <TextInput
+              className="bg-gray-100 rounded-lg pl-12 pr-4 py-3 text-[14px] bg-[#EEEEEF]"
+              placeholder={t('LanguageBottomSheet.search')}
+              placeholderTextColor="#4B5563"
+              value={searchQuery}
+              onChangeText={setSearchQuery}
+              autoCorrect={false}
+              autoCapitalize="none"
+            />
+          </View>
+        </View>
+
+        <View className="flex-row items-center mb-4 p-1 bg-[#EEEEEF] rounded-[9px]">
+          <Pressable
+            className={`flex-1 rounded-[7px] py-1 ${languageType === 'source' ? 'bg-text-onPrimary' : ''}`}
+            onPress={() => setLanguageType('source')}
+          >
+            <Text
+              className={`text-[13px] text-gray-800 text-center ${languageType === 'source' ? 'font-semibold' : 'font-normal'}`}
+            >
+              {sourceLanguage.name}
+            </Text>
+          </Pressable>
+          <Pressable
+            className={`flex-1 rounded-[7px] py-1 ${languageType === 'target' ? 'bg-text-onPrimary' : ''}`}
+            onPress={() => setLanguageType('target')}
+          >
+            <Text
+              className={`text-[13px] text-gray-800 text-center ${languageType === 'target' ? 'font-semibold' : 'font-normal'}`}
+            >
+              {targetLanguage.name}
+            </Text>
+          </Pressable>
         </View>
 
         <FlatList
           data={filteredLanguages}
+          className="bg-bg-elevated rounded-2xl px-6 py-4"
           keyExtractor={item => item.id}
           showsVerticalScrollIndicator={false}
+          ItemSeparatorComponent={ItemSeparatorComponent}
           renderItem={({ item }) => (
             <Pressable
-              className="py-3 px-2 border-b border-gray-100"
+              className="flex-row items-center py-3 gap-2"
               onPress={() => handleLanguageSelect(item)}
             >
-              <Text className="text-[14px] text-gray-800">{item.name}</Text>
+              <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
+              {((languageType === 'source' && item.id === sourceLanguage.id) ||
+                (languageType === 'target' && item.id === targetLanguage.id)) && (
+                <CheckIcon width={24} height={24} color="#2563EB" />
+              )}
             </Pressable>
           )}
           ListEmptyComponent={
             <View className="py-8 items-center">
-              <Text className="text-[14px] text-gray-500">
+              <Text className="text-[14px] font-semibold">
                 {t('LanguageBottomSheet.no_languages_found')}
               </Text>
             </View>

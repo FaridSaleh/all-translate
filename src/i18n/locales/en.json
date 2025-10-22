@@ -16,6 +16,7 @@
     "search": "Search",
     "popular": "Popular",
     "all": "All",
-    "no_languages_found": "No languages found"
+    "no_languages_found": "No languages found",
+    "detect_language": "Detect Language"
   }
 }
