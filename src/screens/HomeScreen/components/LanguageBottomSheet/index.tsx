@@ -1,5 +1,5 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Pressable, Text, View, TextInput, FlatList } from 'react-native'
+import { Pressable, Text, View, TextInput, FlatList, ScrollView } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import LanguageBottomSheetProps from './type'
 import { CheckIcon, SearchIcon } from '@/assets'
@@ -26,6 +26,26 @@ const LanguageBottomSheet = ({
       setLanguageType(open)
     }
   }, [open])
+
+  const popularLanguages = useMemo(() => {
+    const popular = [
+      { id: 'en', name: 'English' },
+      { id: 'ar', name: 'Arabic' },
+      { id: 'zh', name: 'Chinese' },
+      { id: 'es', name: 'Spanish' },
+      { id: 'fr', name: 'French' },
+      { id: 'de', name: 'German' },
+      { id: 'it', name: 'Italian' },
+    ]
+
+    if (!searchQuery.trim()) {
+      return popular
+    }
+
+    return popular.filter(language =>
+      language.name.toLowerCase().includes(searchQuery.toLowerCase()),
+    )
+  }, [searchQuery])
 
   const filteredLanguages = useMemo(() => {
     if (!configuration?.supportedLanguages) return []
@@ -118,32 +138,60 @@ const LanguageBottomSheet = ({
           </Pressable>
         </View>
 
-        <FlatList
-          data={filteredLanguages}
-          className="bg-bg-elevated rounded-2xl px-6 py-4"
-          keyExtractor={item => item.id}
-          showsVerticalScrollIndicator={false}
-          ItemSeparatorComponent={ItemSeparatorComponent}
-          renderItem={({ item }) => (
-            <Pressable
-              className="flex-row items-center py-3 gap-2"
-              onPress={() => handleLanguageSelect(item)}
-            >
-              <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
-              {((languageType === 'source' && item.id === sourceLanguage.id) ||
-                (languageType === 'target' && item.id === targetLanguage.id)) && (
-                <CheckIcon width={24} height={24} color="#2563EB" />
-              )}
-            </Pressable>
+        <ScrollView>
+          {popularLanguages.length > 0 && (
+            <>
+              <Text className="text-[14px] font-bold text-text-secondary mb-2 ml-2">Popular</Text>
+              <View className="bg-bg-elevated rounded-2xl px-6 py-4 mb-4">
+                {popularLanguages.map((item, index) => (
+                  <View key={item.id}>
+                    <Pressable
+                      className="flex-row items-center py-3 gap-2"
+                      onPress={() => handleLanguageSelect(item)}
+                    >
+                      <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
+                      {((languageType === 'source' && item.id === sourceLanguage.id) ||
+                        (languageType === 'target' && item.id === targetLanguage.id)) && (
+                        <CheckIcon width={24} height={24} color="#2563EB" />
+                      )}
+                    </Pressable>
+                    {index < popularLanguages.length - 1 && <ItemSeparatorComponent />}
+                  </View>
+                ))}
+              </View>
+            </>
           )}
-          ListEmptyComponent={
-            <View className="py-8 items-center">
-              <Text className="text-[14px] font-semibold">
-                {t('LanguageBottomSheet.no_languages_found')}
-              </Text>
-            </View>
-          }
-        />
+
+          <Text className="text-[14px] font-bold text-text-secondary mb-2 ml-2">
+            {t('LanguageBottomSheet.all')}
+          </Text>
+          <FlatList
+            data={filteredLanguages}
+            className="bg-bg-elevated rounded-2xl px-6 py-4"
+            keyExtractor={item => item.id}
+            showsVerticalScrollIndicator={false}
+            ItemSeparatorComponent={ItemSeparatorComponent}
+            renderItem={({ item }) => (
+              <Pressable
+                className="flex-row items-center py-3 gap-2"
+                onPress={() => handleLanguageSelect(item)}
+              >
+                <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
+                {((languageType === 'source' && item.id === sourceLanguage.id) ||
+                  (languageType === 'target' && item.id === targetLanguage.id)) && (
+                  <CheckIcon width={24} height={24} color="#2563EB" />
+                )}
+              </Pressable>
+            )}
+            ListEmptyComponent={
+              <View className="py-8 items-center">
+                <Text className="text-[14px] font-semibold">
+                  {t('LanguageBottomSheet.no_languages_found')}
+                </Text>
+              </View>
+            }
+          />
+        </ScrollView>
       </View>
     </BottomSheet>
   )
