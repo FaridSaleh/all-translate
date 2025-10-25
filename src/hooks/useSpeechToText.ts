@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { Platform, PermissionsAndroid } from 'react-native'
 import Voice, { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice'
 
 interface UseSpeechToTextDto {
@@ -17,6 +18,28 @@ const useSpeechToText = (): UseSpeechToTextDto => {
   const [isAvailable, setIsAvailable] = useState(false)
   const [results, setResults] = useState<string[]>([])
   const [error, setError] = useState<string | null>(null)
+
+  const requestMicrophonePermission = async (): Promise<boolean> => {
+    if (Platform.OS !== 'android') {
+      return true
+    }
+
+    try {
+      const granted = await PermissionsAndroid.request(
+        PermissionsAndroid.PERMISSIONS.RECORD_AUDIO,
+        {
+          title: 'Microphone Permission',
+          message: 'This app needs access to your microphone to use speech recognition.',
+          buttonNeutral: 'Ask Me Later',
+          buttonNegative: 'Cancel',
+          buttonPositive: 'OK',
+        },
+      )
+      return granted === PermissionsAndroid.RESULTS.GRANTED
+    } catch (err) {
+      return false
+    }
+  }
 
   useEffect(() => {
     Voice.onSpeechStart = () => {
@@ -50,6 +73,15 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     try {
       setError(null)
       setResults([])
+
+      if (!isAvailable) {
+        const granted = await requestMicrophonePermission()
+        if (!granted) {
+          setError('Microphone permission is required for speech recognition')
+          return
+        }
+      }
+
       await Voice.start(language)
     } catch (err) {
       setError('Failed to start speech recognition')
@@ -69,8 +101,14 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     setError(null)
   }
 
-  const isLanguageAvailable = async (language: string) => {
-    // return await Voice.isLanguageAvailable(language)
+  const isLanguageAvailable = async (language: string): Promise<boolean> => {
+    try {
+      await Voice.start(language)
+      await Voice.stop()
+      return true
+    } catch {
+      return false
+    }
   }
 
   return {

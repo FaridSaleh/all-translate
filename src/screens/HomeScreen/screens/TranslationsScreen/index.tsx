@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Alert, Pressable, Text, View } from 'react-native'
+import { Pressable, Text, View } from 'react-native'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
@@ -18,7 +18,7 @@ const TranslationsScreen = () => {
   const [targetLanguage, setTargetLanguage] = useState<LanguageType>({ id: 'es', name: 'Spanish' })
 
   const { hasOptionalUpdate } = useConfigurationStore()
-  const { isListening, isAvailable, results, startListening, stopListening } = useSpeechToText()
+  const { isListening, results, startListening, stopListening } = useSpeechToText()
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -29,11 +29,6 @@ const TranslationsScreen = () => {
   }, [])
 
   const handlePress = async () => {
-    if (!isAvailable) {
-      Alert.alert('Error', 'Speech recognition is not available on this device')
-      return
-    }
-
     if (isListening) {
       await stopListening()
     } else {
