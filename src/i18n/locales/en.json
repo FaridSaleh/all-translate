@@ -4,12 +4,6 @@
     "subtitle": "AI Voice, Photo & Text Translator",
     "description": "Translate photos, text & real-time voice – instantly"
   },
-  "HomeScreen": {
-    "title": "All Translate",
-    "text_and_voice": "Text & Voice",
-    "conversation": "Conversation",
-    "camera": "Camera"
-  },
   "LanguageBottomSheet": {
     "title": "Select Languages",
     "done": "Done",
@@ -18,5 +12,15 @@
     "all": "All",
     "no_languages_found": "No languages found",
     "detect_language": "Detect Language"
+  },
+  "HomeScreen": {
+    "title": "All Translate",
+    "text_and_voice": "Text & Voice",
+    "conversation": "Conversation",
+    "camera": "Camera"
+  },
+  "TranslationsScreen": {
+    "english_text_placeholder": "Enter your Text",
+    "english_listening_placeholder": "Listening ..."
   }
 }

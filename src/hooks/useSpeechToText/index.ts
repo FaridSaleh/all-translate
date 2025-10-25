@@ -1,22 +1,24 @@
 import { useEffect, useState } from 'react'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Voice, { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice'
+import { SUPPORTED_LANGUAGES } from './consts'
 
 interface UseSpeechToTextDto {
   isListening: boolean
   isAvailable: boolean
-  results: string[]
+  result: string
+  setResult: (result: string) => void
   error: string | null
   startListening: (language: string) => Promise<void>
   stopListening: () => Promise<void>
   reset: () => void
-  isLanguageAvailable: (language: string) => Promise<boolean>
+  isLanguageAvailable: (language: string) => boolean
 }
 
 const useSpeechToText = (): UseSpeechToTextDto => {
   const [isListening, setIsListening] = useState(false)
   const [isAvailable, setIsAvailable] = useState(false)
-  const [results, setResults] = useState<string[]>([])
+  const [result, setResult] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
 
   const requestMicrophonePermission = async (): Promise<boolean> => {
@@ -52,8 +54,8 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     }
 
     Voice.onSpeechResults = (e: SpeechResultsEvent) => {
-      if (e.value) {
-        setResults(e.value)
+      if (e.value && e.value[0]) {
+        setResult(e.value[0])
       }
     }
 
@@ -72,7 +74,7 @@ const useSpeechToText = (): UseSpeechToTextDto => {
   const startListening = async (language: string) => {
     try {
       setError(null)
-      setResults([])
+      setResult('')
 
       if (!isAvailable) {
         const granted = await requestMicrophonePermission()
@@ -90,6 +92,7 @@ const useSpeechToText = (): UseSpeechToTextDto => {
 
   const stopListening = async () => {
     try {
+      setIsListening(false)
       await Voice.stop()
     } catch (err) {
       setError('Failed to stop speech recognition')
@@ -97,24 +100,22 @@ const useSpeechToText = (): UseSpeechToTextDto => {
   }
 
   const reset = () => {
-    setResults([])
+    setResult('')
     setError(null)
   }
 
-  const isLanguageAvailable = async (language: string): Promise<boolean> => {
-    try {
-      await Voice.start(language)
-      await Voice.stop()
+  const isLanguageAvailable = (language: string): boolean => {
+    if (SUPPORTED_LANGUAGES.includes(language)) {
       return true
-    } catch {
-      return false
     }
+    return false
   }
 
   return {
     isListening,
     isAvailable,
-    results,
+    result,
+    setResult,
     error,
     startListening,
     stopListening,
