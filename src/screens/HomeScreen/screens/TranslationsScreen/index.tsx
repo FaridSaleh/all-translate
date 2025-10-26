@@ -66,11 +66,9 @@ const TranslationsScreen = () => {
                   </Text>
                   <ChevronUpAndDownIcon width={9} height={13} />
                 </Pressable>
-                {!isListening && (
-                  <Pressable onPress={handleStartListening}>
-                    <MicrophoneIcon width={20} height={20} color="#000000" />
-                  </Pressable>
-                )}
+                <Pressable onPress={handleStartListening}>
+                  {!isListening && <MicrophoneIcon width={20} height={20} color="#000000" />}
+                </Pressable>
               </View>
               <TextInput
                 className="my-[16px] text-[17px] font-bold text-text-primary bg-[transparent]"

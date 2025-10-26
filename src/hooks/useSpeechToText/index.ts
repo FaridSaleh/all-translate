@@ -92,7 +92,6 @@ const useSpeechToText = (): UseSpeechToTextDto => {
 
   const stopListening = async () => {
     try {
-      setIsListening(false)
       await Voice.stop()
     } catch (err) {
       setError('Failed to stop speech recognition')
