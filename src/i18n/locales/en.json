@@ -21,6 +21,12 @@
   },
   "TranslationsScreen": {
     "english_text_placeholder": "Enter your Text",
-    "english_listening_placeholder": "Listening ..."
+    "english_listening_placeholder": "Listening ...",
+    "paste": "Paste",
+    "voice_translation_not_available": {
+      "title": "Voice Translation Not Available",
+      "description_1": "Voice translation for <bold>this language</bold> isn’t included in the free version.",
+      "description_2": "Upgrade to access <bold>high-quality [{{language}}]</bold> voice translation, and unlock all other Pro features."
+    }
   }
 }

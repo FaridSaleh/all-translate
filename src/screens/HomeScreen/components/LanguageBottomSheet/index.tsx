@@ -83,7 +83,7 @@ const LanguageBottomSheet = ({
     <BottomSheet
       isOpen={open ? true : false}
       setIsOpen={value => setOpen(value as 'source' | 'target' | false)}
-      height="100%"
+      height="90%"
     >
       <View className="px-6 py-4 flex-1">
         <View className="w-full flex-row justify-between mb-4">

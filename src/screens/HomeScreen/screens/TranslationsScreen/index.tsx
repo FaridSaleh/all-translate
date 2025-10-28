@@ -1,23 +1,24 @@
 import { useEffect, useState } from 'react'
-import { Alert, Pressable, Text, TextInput, View } from 'react-native'
-import { useTranslation } from 'react-i18next'
+import { Pressable, View } from 'react-native'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
+import LanguageSection from './components/LanguageSection'
+import VoiceUnavailableBottomSheet from './components/VoiceUnavailableBottomSheet'
 import { LanguageType } from './type'
-import { ChevronUpAndDownIcon, MicrophoneIcon } from '@/assets'
+import { SwapIcon } from '@/assets'
 import useSpeechToText from '@/hooks/useSpeechToText'
 import useConfigurationStore from '@/store/configuration'
 
 const TranslationsScreen = () => {
-  const { t } = useTranslation()
   const [isOptionalUpdateOpen, setIsOptionalUpdateOpen] = useState(false)
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
+  const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
+  const [targetLanguage, setTargetLanguage] = useState<LanguageType>({ id: 'es', name: 'Spanish' })
   const [sourceLanguage, setSourceLanguage] = useState<LanguageType>({
     id: 'detect',
     name: 'Detect Language',
   })
-  const [targetLanguage, setTargetLanguage] = useState<LanguageType>({ id: 'es', name: 'Spanish' })
 
   const { hasOptionalUpdate } = useConfigurationStore()
   const {
@@ -39,7 +40,7 @@ const TranslationsScreen = () => {
 
   const handleStartListening = async () => {
     if (!isLanguageAvailable(sourceLanguage.id)) {
-      Alert.alert('Language not supported')
+      setIsVoiceUnavailableOpen(true)
       return
     }
 
@@ -50,57 +51,61 @@ const TranslationsScreen = () => {
     await stopListening()
   }
 
+  const handleSwapLanguages = () => {
+    const temp = sourceLanguage
+    setSourceLanguage(targetLanguage)
+    setTargetLanguage(temp)
+    setSourceText('')
+  }
+
   return (
     <>
       <GradientLayout>
         <View className="flex-1 p-6">
           <View className="flex-1">
             <View className="bg-bg-card rounded-2xl p-4">
-              <View className="flex-row items-center justify-between">
+              <LanguageSection
+                type="source"
+                language={sourceLanguage}
+                setOpenLanguageModal={setOpenLanguageModal}
+                handleStartListening={handleStartListening}
+                handleStopListening={handleStopListening}
+                isListening={isListening}
+                inputValue={sourceText}
+                setInputValue={setSourceText}
+              />
+              <View className="flex-row items-center">
+                <View className="flex-1 border-t border-bg-buttonDisabled" />
                 <Pressable
-                  className="flex-row items-center gap-2"
-                  onPress={() => setOpenLanguageModal('source')}
+                  className="w-[30px] h-[30px] bg-bg-base rounded-full items-center justify-center"
+                  onPress={handleSwapLanguages}
                 >
-                  <Text className="text-[14px] font-medium text-text-primary">
-                    {sourceLanguage.name}
-                  </Text>
-                  <ChevronUpAndDownIcon width={9} height={13} />
+                  <SwapIcon width={15} height={12} color="#1D4ED8" />
                 </Pressable>
-                <Pressable onPress={handleStartListening}>
-                  {!isListening && <MicrophoneIcon width={20} height={20} color="#000000" />}
-                </Pressable>
+                <View className="flex-1 border-t border-bg-buttonDisabled" />
               </View>
-              <TextInput
-                className="my-[16px] text-[17px] font-bold text-text-primary bg-[transparent]"
-                placeholder={t('TranslationsScreen.english_text_placeholder')}
-                placeholderTextColor="#9CA3AF"
-                value={sourceText}
-                onChangeText={text => {
-                  setSourceText(text)
-                  if (isListening) {
-                    stopListening()
-                  }
-                }}
-                autoCorrect={false}
-                autoCapitalize="none"
+              <LanguageSection
+                type="target"
+                language={targetLanguage}
+                setOpenLanguageModal={setOpenLanguageModal}
+                handleStartListening={handleStartListening}
+                handleStopListening={handleStopListening}
+                isListening={isListening}
+                inputValue={sourceText}
+                setInputValue={setSourceText}
               />
             </View>
-            <View className="items-center">
-              <Text className="text-sm text-gray-600 mt-2">
-                {isListening ? 'Listening...' : 'Tap to speak'}
-              </Text>
-            </View>
           </View>
-          {isListening && (
-            <View className="pb-20 items-center">
+          <View className="pb-20 items-center h-20">
+            {isListening && (
               <Pressable
                 className="w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full"
                 onPress={handleStopListening}
               >
                 <View className="w-[21px] h-[21px] bg-text-onPrimary rounded-sm" />
               </Pressable>
-            </View>
-          )}
+            )}
+          </View>
         </View>
       </GradientLayout>
 
@@ -116,6 +121,12 @@ const TranslationsScreen = () => {
         setSourceLanguage={setSourceLanguage}
         targetLanguage={targetLanguage}
         setTargetLanguage={setTargetLanguage}
+      />
+
+      <VoiceUnavailableBottomSheet
+        open={isVoiceUnavailableOpen}
+        setOpen={setIsVoiceUnavailableOpen}
+        languageName={sourceLanguage.name}
       />
     </>
   )
