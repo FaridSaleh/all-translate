@@ -27,6 +27,7 @@ const TranslationsScreen = () => {
     setResult: setSourceText,
     startListening,
     stopListening,
+    languageAvailabilityCheck,
     isLanguageAvailable,
   } = useSpeechToText()
 
@@ -38,8 +39,15 @@ const TranslationsScreen = () => {
     return () => clearTimeout(timeout)
   }, [])
 
+  useEffect(() => {
+    const checkLanguageAvailability = async () => {
+      await languageAvailabilityCheck(sourceLanguage.id)
+    }
+    checkLanguageAvailability()
+  }, [sourceLanguage.id])
+
   const handleStartListening = async () => {
-    if (!isLanguageAvailable(sourceLanguage.id)) {
+    if (!isLanguageAvailable) {
       setIsVoiceUnavailableOpen(true)
       return
     }
