@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Voice, { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice'
-// import { SUPPORTED_LANGUAGES } from './consts'
 
 interface UseSpeechToTextDto {
   isListening: boolean
@@ -12,14 +11,14 @@ interface UseSpeechToTextDto {
   startListening: (language: string) => Promise<void>
   stopListening: () => Promise<void>
   reset: () => void
-  languageAvailabilityCheck: (language: string) => void
-  isLanguageAvailable: boolean
+  transcriptAvailabilityCheck: (language: string) => void
+  isTranscriptAvailable: boolean
 }
 
 const useSpeechToText = (): UseSpeechToTextDto => {
   const [isListening, setIsListening] = useState(false)
   const [isAvailable, setIsAvailable] = useState(false)
-  const [isLanguageAvailable, setIsLanguageAvailable] = useState(false)
+  const [isTranscriptAvailable, setIsTranscriptAvailable] = useState(false)
   const [result, setResult] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
 
@@ -47,27 +46,23 @@ const useSpeechToText = (): UseSpeechToTextDto => {
 
   useEffect(() => {
     Voice.onSpeechStart = () => {
-      console.log('Voice.onSpeechStart')
       setIsListening(true)
       setError(null)
     }
 
     Voice.onSpeechEnd = () => {
-      setIsLanguageAvailable(true)
-      console.log('Voice.onSpeechEnd')
+      setIsTranscriptAvailable(true)
       setIsListening(false)
     }
 
     Voice.onSpeechResults = (e: SpeechResultsEvent) => {
-      console.log('Voice.onSpeechResults')
       if (e.value && e.value[0]) {
         setResult(e.value[0])
       }
     }
 
     Voice.onSpeechError = (e: SpeechErrorEvent) => {
-      setIsLanguageAvailable(true)
-      console.log('Voice.onSpeechError')
+      setIsTranscriptAvailable(true)
       setError(e.error?.message || 'Speech recognition error')
       setIsListening(false)
     }
@@ -111,13 +106,13 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     setError(null)
   }
 
-  const languageAvailabilityCheck = async (language: string) => {
+  const transcriptAvailabilityCheck = async (language: string) => {
     // if (SUPPORTED_LANGUAGES.includes(language)) {
     //   return true
     // }
     // return false
 
-    setIsLanguageAvailable(false)
+    setIsTranscriptAvailable(false)
     await Voice.start(language)
     await Voice.stop()
     setIsListening(false)
@@ -132,8 +127,8 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     startListening,
     stopListening,
     reset,
-    languageAvailabilityCheck,
-    isLanguageAvailable,
+    transcriptAvailabilityCheck,
+    isTranscriptAvailable,
   }
 }
 

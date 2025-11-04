@@ -2,10 +2,10 @@ import React from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { useTranslation } from 'react-i18next'
-import LanguageSectionProps from './type'
-import { ChevronUpAndDownIcon, MicrophoneIcon, PasteIcon } from '@/assets'
+import SourceLanguageSectionProps from './type'
+import { ChevronUpAndDownIcon, InfoIcon, MicrophoneIcon, PasteIcon } from '@/assets'
 
-const LanguageSection = ({
+const SourceLanguageSection = ({
   type,
   language,
   setOpenLanguageModal,
@@ -14,7 +14,9 @@ const LanguageSection = ({
   isListening,
   inputValue,
   setInputValue,
-}: LanguageSectionProps) => {
+  isTranscriptAvailable,
+  setIsVoiceUnavailableOpen,
+}: SourceLanguageSectionProps) => {
   const { t } = useTranslation()
 
   const handleInputChange = (text: string) => {
@@ -39,8 +41,22 @@ const LanguageSection = ({
           <Text className="text-[14px] font-medium text-text-primary">{language.name}</Text>
           <ChevronUpAndDownIcon width={9} height={13} />
         </Pressable>
-        <Pressable onPress={handleStartListening}>
-          <MicrophoneIcon width={20} height={20} color={isListening ? '#00000000' : '#000000'} />
+        <Pressable
+          disabled={!isTranscriptAvailable}
+          className="flex-row items-center"
+          onPress={handleStartListening}
+        >
+          <MicrophoneIcon
+            width={20}
+            opacity={isListening ? 0 : 1}
+            height={20}
+            color={!isTranscriptAvailable ? '#9CA3AF' : '#000000'}
+          />
+          {!isTranscriptAvailable && (
+            <Pressable onPress={() => setIsVoiceUnavailableOpen(true)}>
+              <InfoIcon width={23} height={23} color="#9CA3AF" />
+            </Pressable>
+          )}
         </Pressable>
       </View>
       <TextInput
@@ -65,4 +81,4 @@ const LanguageSection = ({
   )
 }
 
-export default LanguageSection
+export default SourceLanguageSection

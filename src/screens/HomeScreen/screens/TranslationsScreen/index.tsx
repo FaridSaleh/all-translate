@@ -3,7 +3,7 @@ import { Pressable, View } from 'react-native'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
-import LanguageSection from './components/LanguageSection'
+import SourceLanguageSection from './components/SourceLanguageSection'
 import VoiceUnavailableBottomSheet from './components/VoiceUnavailableBottomSheet'
 import { LanguageType } from './type'
 import { SwapIcon } from '@/assets'
@@ -27,8 +27,8 @@ const TranslationsScreen = () => {
     setResult: setSourceText,
     startListening,
     stopListening,
-    languageAvailabilityCheck,
-    isLanguageAvailable,
+    transcriptAvailabilityCheck,
+    isTranscriptAvailable,
   } = useSpeechToText()
 
   useEffect(() => {
@@ -40,18 +40,14 @@ const TranslationsScreen = () => {
   }, [])
 
   useEffect(() => {
+    setSourceText('')
     const checkLanguageAvailability = async () => {
-      await languageAvailabilityCheck(sourceLanguage.id)
+      await transcriptAvailabilityCheck(sourceLanguage.id)
     }
     checkLanguageAvailability()
   }, [sourceLanguage.id])
 
   const handleStartListening = async () => {
-    if (!isLanguageAvailable) {
-      setIsVoiceUnavailableOpen(true)
-      return
-    }
-
     await startListening(sourceLanguage.id)
   }
 
@@ -72,7 +68,7 @@ const TranslationsScreen = () => {
         <View className="flex-1 p-6">
           <View className="flex-1">
             <View className="bg-bg-card rounded-2xl p-4">
-              <LanguageSection
+              <SourceLanguageSection
                 type="source"
                 language={sourceLanguage}
                 setOpenLanguageModal={setOpenLanguageModal}
@@ -81,6 +77,8 @@ const TranslationsScreen = () => {
                 isListening={isListening}
                 inputValue={sourceText}
                 setInputValue={setSourceText}
+                isTranscriptAvailable={isTranscriptAvailable}
+                setIsVoiceUnavailableOpen={setIsVoiceUnavailableOpen}
               />
               <View className="flex-row items-center">
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
@@ -92,7 +90,7 @@ const TranslationsScreen = () => {
                 </Pressable>
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
               </View>
-              <LanguageSection
+              {/* <SourceLanguageSection
                 type="target"
                 language={targetLanguage}
                 setOpenLanguageModal={setOpenLanguageModal}
@@ -101,7 +99,7 @@ const TranslationsScreen = () => {
                 isListening={isListening}
                 inputValue={sourceText}
                 setInputValue={setSourceText}
-              />
+              /> */}
             </View>
           </View>
           <View className="pb-20 items-center h-20">
