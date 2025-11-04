@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Voice, { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice'
+import { getSpeechSupportedLocales } from '../../native/SpeechLocales'
 
 interface UseSpeechToTextDto {
   isListening: boolean
@@ -21,6 +22,7 @@ const useSpeechToText = (): UseSpeechToTextDto => {
   const [isTranscriptAvailable, setIsTranscriptAvailable] = useState(false)
   const [result, setResult] = useState<string>('')
   const [error, setError] = useState<string | null>(null)
+  const [supportedLocales, setSupportedLocales] = useState<string[]>([])
 
   const requestMicrophonePermission = async (): Promise<boolean> => {
     if (Platform.OS !== 'android') {
@@ -68,6 +70,7 @@ const useSpeechToText = (): UseSpeechToTextDto => {
     }
 
     Voice.isAvailable().then(available => setIsAvailable(!!available))
+    getSpeechSupportedLocales().then(list => setSupportedLocales(list.map(l => l.toLowerCase())))
 
     return () => {
       Voice.destroy().then(Voice.removeAllListeners)
@@ -107,14 +110,15 @@ const useSpeechToText = (): UseSpeechToTextDto => {
   }
 
   const transcriptAvailabilityCheck = async (language: string) => {
-    // if (SUPPORTED_LANGUAGES.includes(language)) {
-    //   return true
-    // }
-    // return false
+    const langLower = (language || '').toLowerCase()
+    const baseLang = langLower.split('-')[0]
+    const locales = supportedLocales
+    console.log('🚀 ~ transcriptAvailabilityCheck ~ supportedLocales:', supportedLocales)
 
-    setIsTranscriptAvailable(false)
-    await Voice.start(language)
-    await Voice.stop()
+    const isSupported = locales.some(
+      l => l === langLower || l === baseLang || l.startsWith(`${baseLang}-`),
+    )
+    setIsTranscriptAvailable(isSupported)
     setIsListening(false)
   }
 
