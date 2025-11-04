@@ -29,6 +29,7 @@ const BottomSheet = ({ children, isOpen, setIsOpen, height }: BottomSheetProps) 
         disappearsOnIndex={-1}
         appearsOnIndex={0}
         opacity={0.72}
+        // eslint-disable-next-line react-native/no-inline-styles
         style={{ backgroundColor: '#1B1F26' }}
         pressBehavior="none"
       />
@@ -46,10 +47,9 @@ const BottomSheet = ({ children, isOpen, setIsOpen, height }: BottomSheetProps) 
 
   return (
     <BottomSheetModal
-      snapPoints={snapPoints}
-      index={0}
+      snapPoints={height ? snapPoints : undefined}
       enableOverDrag={false}
-      enableDynamicSizing={false}
+      enableDynamicSizing={height ? false : true}
       enableContentPanningGesture={false}
       enableHandlePanningGesture={true}
       enablePanDownToClose={true}
@@ -57,7 +57,7 @@ const BottomSheet = ({ children, isOpen, setIsOpen, height }: BottomSheetProps) 
       ref={bottomSheetRef}
       backdropComponent={renderBackdrop}
     >
-      <BottomSheetView className="h-full pb-safe-offset-0">{children}</BottomSheetView>
+      <BottomSheetView className="pb-safe-offset-0">{children}</BottomSheetView>
     </BottomSheetModal>
   )
 }

@@ -1,4 +1,3 @@
-import React from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { useTranslation } from 'react-i18next'
@@ -6,7 +5,6 @@ import SourceLanguageSectionProps from './type'
 import { ChevronUpAndDownIcon, InfoIcon, MicrophoneIcon, PasteIcon } from '@/assets'
 
 const SourceLanguageSection = ({
-  type,
   language,
   setOpenLanguageModal,
   handleStartListening,
@@ -36,10 +34,10 @@ const SourceLanguageSection = ({
       <View className="flex-row items-center justify-between">
         <Pressable
           className="flex-row items-center gap-2"
-          onPress={() => setOpenLanguageModal(type)}
+          onPress={() => setOpenLanguageModal('source')}
         >
           <Text className="text-[14px] font-medium text-text-primary">{language.name}</Text>
-          <ChevronUpAndDownIcon width={9} height={13} />
+          <ChevronUpAndDownIcon width={9} height={13} color="#000" />
         </Pressable>
         <Pressable
           disabled={!isTranscriptAvailable}
@@ -61,7 +59,11 @@ const SourceLanguageSection = ({
       </View>
       <TextInput
         className="text-[17px] font-bold text-text-primary bg-[transparent]"
-        placeholder={t('TranslationsScreen.english_text_placeholder')}
+        placeholder={
+          isListening
+            ? t('TranslationsScreen.english_listening_placeholder')
+            : t('TranslationsScreen.english_text_placeholder')
+        }
         placeholderTextColor="#9CA3AF"
         value={inputValue}
         multiline
@@ -69,14 +71,12 @@ const SourceLanguageSection = ({
         autoCorrect={false}
         autoCapitalize="none"
       />
-      {type === 'source' && (
-        <Pressable className="flex-row gap-[12px] items-center" onPress={fetchClipboardText}>
-          <PasteIcon width={12} height={12} color="#4B5563" />
-          <Text className="text-[12px] font-regular text-text-secondary">
-            {t('TranslationsScreen.paste')}
-          </Text>
-        </Pressable>
-      )}
+      <Pressable className="flex-row gap-[12px] items-center" onPress={fetchClipboardText}>
+        <PasteIcon width={12} height={12} color="#4B5563" />
+        <Text className="text-[12px] font-regular text-text-secondary">
+          {t('TranslationsScreen.paste')}
+        </Text>
+      </Pressable>
     </View>
   )
 }
