@@ -2,6 +2,7 @@ import { NativeModules } from 'react-native'
 
 type ModuleShape = {
   getSupportedLocales: () => Promise<string[]>
+  getDiagnostics?: () => Promise<{ recognitionAvailable: boolean; engines: string[] }>
 }
 
 const { RNSpeechLocales } = NativeModules as { RNSpeechLocales?: ModuleShape }
@@ -18,5 +19,21 @@ export async function getSpeechSupportedLocales(): Promise<string[]> {
     return Array.from(new Set(normalized))
   } catch {
     return []
+  }
+}
+
+export async function getAndroidSpeechDiagnostics(): Promise<{
+  recognitionAvailable: boolean
+  engines: string[]
+} | null> {
+  if (!RNSpeechLocales || !RNSpeechLocales.getDiagnostics) return null
+  try {
+    const res = await RNSpeechLocales.getDiagnostics()
+    return {
+      recognitionAvailable: !!res?.recognitionAvailable,
+      engines: Array.isArray(res?.engines) ? res.engines : [],
+    }
+  } catch {
+    return null
   }
 }

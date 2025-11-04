@@ -42,7 +42,7 @@ const SourceLanguageSection = ({
           <ChevronUpAndDownIcon width={9} height={13} />
         </Pressable>
         <Pressable
-          disabled={!isTranscriptAvailable}
+          // disabled={!isTranscriptAvailable}
           className="flex-row items-center"
           onPress={handleStartListening}
         >
