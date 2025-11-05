@@ -5,7 +5,6 @@ import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
 import SourceLanguageSection from './components/SourceLanguageSection'
 import TargetLanguageSection from './components/TargetLanguageSection'
-import VoiceUnavailableBottomSheet from './components/VoiceUnavailableBottomSheet'
 import { LanguageType } from './type'
 import { SwapIcon } from '@/assets'
 import useSpeechToText from '@/hooks/useSpeechToText'
@@ -14,7 +13,6 @@ import useConfigurationStore from '@/store/configuration'
 const TranslationsScreen = () => {
   const [isOptionalUpdateOpen, setIsOptionalUpdateOpen] = useState(false)
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
-  const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
   const [targetLanguage, setTargetLanguage] = useState<LanguageType>({ id: 'es', name: 'Spanish' })
   const [sourceLanguage, setSourceLanguage] = useState<LanguageType>({
     id: 'detect',
@@ -79,7 +77,6 @@ const TranslationsScreen = () => {
                 setInputValue={setSourceText}
                 // isTranscriptAvailable={isTranscriptAvailable}
                 isTranscriptAvailable={transcriptAvailabilityCheck(sourceLanguage.id)}
-                setIsVoiceUnavailableOpen={setIsVoiceUnavailableOpen}
               />
               <View className="flex-row items-center">
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
@@ -96,7 +93,6 @@ const TranslationsScreen = () => {
                 setOpenLanguageModal={setOpenLanguageModal}
                 isListening={isListening}
                 isTranscriptAvailable={transcriptAvailabilityCheck(targetLanguage.id)}
-                setIsVoiceUnavailableOpen={setIsVoiceUnavailableOpen}
                 handleSwapLanguages={handleSwapLanguages}
               />
             </View>
@@ -126,12 +122,6 @@ const TranslationsScreen = () => {
         setSourceLanguage={setSourceLanguage}
         targetLanguage={targetLanguage}
         setTargetLanguage={setTargetLanguage}
-      />
-
-      <VoiceUnavailableBottomSheet
-        open={isVoiceUnavailableOpen}
-        setOpen={setIsVoiceUnavailableOpen}
-        languageName={sourceLanguage.name}
       />
     </>
   )

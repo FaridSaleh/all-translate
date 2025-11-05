@@ -5,6 +5,5 @@ export default interface TargetLanguageSectionProps {
   setOpenLanguageModal: (value: 'source' | 'target' | false) => void
   isListening: boolean
   isTranscriptAvailable: boolean
-  setIsVoiceUnavailableOpen: (value: boolean) => void
   handleSwapLanguages: () => void
 }

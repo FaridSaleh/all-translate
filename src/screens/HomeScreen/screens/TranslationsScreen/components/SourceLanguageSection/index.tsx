@@ -1,6 +1,8 @@
+import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { useTranslation } from 'react-i18next'
+import VoiceUnavailableBottomSheet from '../VoiceUnavailableBottomSheet'
 import SourceLanguageSectionProps from './type'
 import { ChevronUpAndDownIcon, InfoIcon, MicrophoneIcon, PasteIcon } from '@/assets'
 
@@ -13,9 +15,9 @@ const SourceLanguageSection = ({
   inputValue,
   setInputValue,
   isTranscriptAvailable,
-  setIsVoiceUnavailableOpen,
 }: SourceLanguageSectionProps) => {
   const { t } = useTranslation()
+  const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
 
   const handleInputChange = (text: string) => {
     setInputValue(text)
@@ -30,54 +32,62 @@ const SourceLanguageSection = ({
   }
 
   return (
-    <View className="min-h-[160px] gap-[16px]">
-      <View className="flex-row items-center justify-between">
-        <Pressable
-          className="flex-row items-center gap-2"
-          onPress={() => setOpenLanguageModal('source')}
-        >
-          <Text className="text-[14px] font-medium text-text-primary">{language.name}</Text>
-          <ChevronUpAndDownIcon width={9} height={13} color="#000" />
-        </Pressable>
-        <Pressable
-          disabled={!isTranscriptAvailable}
-          className="flex-row items-center"
-          onPress={handleStartListening}
-        >
-          <MicrophoneIcon
-            width={20}
-            opacity={isListening ? 0 : 1}
-            height={20}
-            color={!isTranscriptAvailable ? '#9CA3AF' : '#000000'}
-          />
-          {!isTranscriptAvailable && (
-            <Pressable onPress={() => setIsVoiceUnavailableOpen(true)}>
-              <InfoIcon width={23} height={23} color="#9CA3AF" />
-            </Pressable>
-          )}
+    <>
+      <View className="min-h-[160px] gap-[16px]">
+        <View className="flex-row items-center justify-between">
+          <Pressable
+            className="flex-row items-center gap-2"
+            onPress={() => setOpenLanguageModal('source')}
+          >
+            <Text className="text-[14px] font-medium text-text-primary">{language.name}</Text>
+            <ChevronUpAndDownIcon width={9} height={13} color="#000" />
+          </Pressable>
+          <Pressable
+            disabled={!isTranscriptAvailable}
+            className="flex-row items-center"
+            onPress={handleStartListening}
+          >
+            <MicrophoneIcon
+              width={20}
+              opacity={isListening ? 0 : 1}
+              height={20}
+              color={!isTranscriptAvailable ? '#9CA3AF' : '#000000'}
+            />
+            {!isTranscriptAvailable && (
+              <Pressable onPress={() => setIsVoiceUnavailableOpen(true)}>
+                <InfoIcon width={23} height={23} color="#9CA3AF" />
+              </Pressable>
+            )}
+          </Pressable>
+        </View>
+        <TextInput
+          className="text-[17px] font-bold text-text-primary bg-[transparent]"
+          placeholder={
+            isListening
+              ? t('TranslationsScreen.english_listening_placeholder')
+              : t('TranslationsScreen.english_text_placeholder')
+          }
+          placeholderTextColor="#9CA3AF"
+          value={inputValue}
+          multiline
+          onChangeText={handleInputChange}
+          autoCorrect={false}
+          autoCapitalize="none"
+        />
+        <Pressable className="flex-row gap-[12px] items-center" onPress={fetchClipboardText}>
+          <PasteIcon width={12} height={12} color="#4B5563" />
+          <Text className="text-[12px] font-regular text-text-secondary">
+            {t('TranslationsScreen.paste')}
+          </Text>
         </Pressable>
       </View>
-      <TextInput
-        className="text-[17px] font-bold text-text-primary bg-[transparent]"
-        placeholder={
-          isListening
-            ? t('TranslationsScreen.english_listening_placeholder')
-            : t('TranslationsScreen.english_text_placeholder')
-        }
-        placeholderTextColor="#9CA3AF"
-        value={inputValue}
-        multiline
-        onChangeText={handleInputChange}
-        autoCorrect={false}
-        autoCapitalize="none"
+
+      <VoiceUnavailableBottomSheet
+        open={isVoiceUnavailableOpen}
+        setOpen={setIsVoiceUnavailableOpen}
+        languageName={language.name}
       />
-      <Pressable className="flex-row gap-[12px] items-center" onPress={fetchClipboardText}>
-        <PasteIcon width={12} height={12} color="#4B5563" />
-        <Text className="text-[12px] font-regular text-text-secondary">
-          {t('TranslationsScreen.paste')}
-        </Text>
-      </Pressable>
-    </View>
+    </>
   )
 }
 
