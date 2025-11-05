@@ -16,7 +16,7 @@ const SourceLanguageSection = ({
   setInputValue,
   isTranscriptAvailable,
 }: SourceLanguageSectionProps) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
 
   const handleInputChange = (text: string) => {
@@ -30,6 +30,16 @@ const SourceLanguageSection = ({
     const text = await Clipboard.getString()
     handleInputChange(text)
   }
+
+  const textPlaceholder = i18n.exists(`MultiLanguageTexts.text_placeholder.${language.id}`)
+    ? t(`MultiLanguageTexts.text_placeholder.${language.id}`)
+    : t('MultiLanguageTexts.text_placeholder.en')
+
+  const listeningPlaceholder = i18n.exists(
+    `MultiLanguageTexts.listening_placeholder.${language.id}`,
+  )
+    ? t(`MultiLanguageTexts.listening_placeholder.${language.id}`)
+    : t('MultiLanguageTexts.listening_placeholder.en')
 
   return (
     <>
@@ -62,11 +72,7 @@ const SourceLanguageSection = ({
         </View>
         <TextInput
           className="text-[17px] font-bold text-text-primary bg-[transparent]"
-          placeholder={
-            isListening
-              ? t('TranslationsScreen.english_listening_placeholder')
-              : t('TranslationsScreen.english_text_placeholder')
-          }
+          placeholder={isListening ? listeningPlaceholder : textPlaceholder}
           placeholderTextColor="#9CA3AF"
           value={inputValue}
           multiline

@@ -12,8 +12,18 @@ const TargetLanguageSection = ({
   isTranscriptAvailable,
   handleSwapLanguages,
 }: TargetLanguageSectionProps) => {
-  const { t } = useTranslation()
+  const { t, i18n } = useTranslation()
   const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
+
+  const textPlaceholder = i18n.exists(`MultiLanguageTexts.text_placeholder.${language.id}`)
+    ? t(`MultiLanguageTexts.text_placeholder.${language.id}`)
+    : t('MultiLanguageTexts.text_placeholder.en')
+
+  const listeningPlaceholder = i18n.exists(
+    `MultiLanguageTexts.listening_placeholder.${language.id}`,
+  )
+    ? t(`MultiLanguageTexts.listening_placeholder.${language.id}`)
+    : t('MultiLanguageTexts.listening_placeholder.en')
 
   return (
     <>
@@ -44,9 +54,7 @@ const TargetLanguageSection = ({
         </View>
         <Pressable onPress={handleSwapLanguages}>
           <Text className="text-[17px] font-bold text-[#C2D4FA]">
-            {isListening
-              ? t('TranslationsScreen.english_listening_placeholder')
-              : t('TranslationsScreen.english_text_placeholder')}
+            {isListening ? listeningPlaceholder : textPlaceholder}
           </Text>
         </Pressable>
       </View>

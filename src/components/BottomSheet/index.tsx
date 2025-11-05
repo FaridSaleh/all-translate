@@ -57,7 +57,9 @@ const BottomSheet = ({ children, isOpen, setIsOpen, height }: BottomSheetProps) 
       ref={bottomSheetRef}
       backdropComponent={renderBackdrop}
     >
-      <BottomSheetView className="pb-safe-offset-0">{children}</BottomSheetView>
+      <BottomSheetView className={`${height && 'h-full'} pb-safe-offset-0`}>
+        {children}
+      </BottomSheetView>
     </BottomSheetModal>
   )
 }
