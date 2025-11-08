@@ -21,6 +21,8 @@
   },
   "TranslationsScreen": {
     "paste": "Paste",
+    "translate": "Translate",
+    "clear": "Clear",
     "voice_translation_not_available": {
       "title": "Voice Translation Not Available",
       "description_1": "Voice translation for <bold>this language</bold> isn’t included in the free version.",

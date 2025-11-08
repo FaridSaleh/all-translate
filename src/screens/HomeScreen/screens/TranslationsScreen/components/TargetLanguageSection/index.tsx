@@ -8,6 +8,7 @@ import { ChevronUpAndDownIcon, InfoIcon, MicrophoneIcon } from '@/assets'
 const TargetLanguageSection = ({
   language,
   setOpenLanguageModal,
+  textValue,
   isListening,
   isTranscriptAvailable,
   handleSwapLanguages,
@@ -52,11 +53,13 @@ const TargetLanguageSection = ({
             )}
           </View>
         </View>
-        <Pressable onPress={handleSwapLanguages}>
+        {textValue.length > 0 ? (
+          <Text className="text-[17px] font-bold text-primary-main">{textValue}</Text>
+        ) : (
           <Text className="text-[17px] font-bold text-[#C2D4FA]">
             {isListening ? listeningPlaceholder : textPlaceholder}
           </Text>
-        </Pressable>
+        )}
       </View>
 
       <VoiceUnavailableBottomSheet
