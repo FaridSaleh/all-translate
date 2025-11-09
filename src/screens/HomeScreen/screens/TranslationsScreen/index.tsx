@@ -23,7 +23,7 @@ const TranslationsScreen = () => {
   const [targetLanguage, setTargetLanguage] = useState<LanguageType>({ id: 'es', name: 'Spanish' })
   const [targetText, setTargetText] = useState('')
 
-  const { hasOptionalUpdate } = useConfigurationStore()
+  const { hasOptionalUpdate, hasPremiumFeature } = useConfigurationStore()
   const {
     isListening,
     result: sourceText,
@@ -68,11 +68,23 @@ const TranslationsScreen = () => {
   // }, [sourceLanguage.id])
 
   const handleStartListening = async () => {
-    await startListening(sourceLanguage.id)
+    if (!hasPremiumFeature && !transcriptAvailabilityCheck(sourceLanguage.id)) {
+      return
+    } else if (hasPremiumFeature) {
+      // TODO: Implement premium feature
+    } else {
+      await startListening(sourceLanguage.id)
+    }
   }
 
   const handleStopListening = async () => {
-    await stopListening()
+    if (!hasPremiumFeature && !transcriptAvailabilityCheck(sourceLanguage.id)) {
+      return
+    } else if (hasPremiumFeature) {
+      // TODO: Implement premium feature
+    } else {
+      await stopListening()
+    }
   }
 
   const handleSwapLanguages = () => {

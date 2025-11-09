@@ -10,11 +10,12 @@ interface ConfigurationStore {
   setNextSplashMessageId: (nextSplashMessageId: number | null) => void
   hasOptionalUpdate: boolean
   setHasOptionalUpdate: (hasOptionalUpdate: boolean) => void
+  hasPremiumFeature: boolean
 }
 
 const useConfigurationStore = create<ConfigurationStore>()(
   persist(
-    set => ({
+    (set, get) => ({
       configuration: null,
       setConfiguration: configuration => {
         set({ configuration })
@@ -27,6 +28,7 @@ const useConfigurationStore = create<ConfigurationStore>()(
       setHasOptionalUpdate: hasOptionalUpdate => {
         set({ hasOptionalUpdate })
       },
+      hasPremiumFeature: get()?.configuration?.user?.tire === 'Premium',
     }),
     { name: 'CONFIGURATIONS', storage: createJSONStorage(() => AsyncStorage) },
   ),
