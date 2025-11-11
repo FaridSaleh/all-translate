@@ -181,7 +181,9 @@ const TranslationsScreen = () => {
                 handleSwapLanguages={handleSwapLanguages}
               />
 
-              <View className="flex-1 border-t border-bg-buttonDisabled mb-[18px]" />
+              <View
+                className={`flex-1 border-t border-bg-buttonDisabled mb-[18px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+              />
               <View className="flex-row items-center justify-between">
                 <Pressable
                   className={`h-[31px] justify-center rounded-[6px] p-[6px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
