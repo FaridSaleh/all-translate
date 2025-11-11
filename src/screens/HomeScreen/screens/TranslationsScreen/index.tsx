@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { InteractionManager, Pressable, Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
@@ -47,6 +47,7 @@ const TranslationsScreen = () => {
   const { mutate: transcriptSpeech } = useSpeechToTextRequest()
 
   const isCurrentlyListening = isListening || isRecording
+  const [isSwapping, setIsSwapping] = useState(false)
 
   const handleTranslateText = async () => {
     translateText(
@@ -121,10 +122,15 @@ const TranslationsScreen = () => {
   }
 
   const handleSwapLanguages = () => {
+    if (isSwapping) return
+    setIsSwapping(true)
+
     const temp = sourceLanguage
     setSourceLanguage(targetLanguage)
     setTargetLanguage(temp)
     clearTexts()
+
+    InteractionManager.runAfterInteractions(() => setIsSwapping(false))
   }
 
   const clearTexts = () => {
@@ -158,7 +164,8 @@ const TranslationsScreen = () => {
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
                 <Pressable
                   className="w-[30px] h-[30px] bg-bg-base rounded-full items-center justify-center"
-                  onPress={handleSwapLanguages}
+                  onPress={isSwapping ? undefined : handleSwapLanguages}
+                  disabled={isSwapping}
                 >
                   <SwapIcon width={15} height={12} color="#1D4ED8" />
                 </Pressable>
@@ -174,41 +181,35 @@ const TranslationsScreen = () => {
                 handleSwapLanguages={handleSwapLanguages}
               />
 
-              {sourceText.length > 0 && (
-                <>
-                  <View className="flex-1 border-t border-bg-buttonDisabled mb-[18px]" />
-                  <View className="flex-row items-center justify-between">
-                    <Pressable
-                      className="h-[31px] justify-center rounded-[6px] p-[6px]"
-                      onPress={clearTexts}
-                    >
-                      <Text className="text-[16px] font-regular text-primary-main text-center">
-                        {t('TranslationsScreen.clear')}
-                      </Text>
-                    </Pressable>
-                    <Pressable
-                      className="h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px]"
-                      onPress={handleTranslateText}
-                    >
-                      <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
-                        {t('TranslationsScreen.translate')}
-                      </Text>
-                    </Pressable>
-                  </View>
-                </>
-              )}
+              <View className="flex-1 border-t border-bg-buttonDisabled mb-[18px]" />
+              <View className="flex-row items-center justify-between">
+                <Pressable
+                  className={`h-[31px] justify-center rounded-[6px] p-[6px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+                  onPress={clearTexts}
+                >
+                  <Text className="text-[16px] font-regular text-primary-main text-center">
+                    {t('TranslationsScreen.clear')}
+                  </Text>
+                </Pressable>
+                <Pressable
+                  className={`h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+                  onPress={handleTranslateText}
+                >
+                  <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
+                    {t('TranslationsScreen.translate')}
+                  </Text>
+                </Pressable>
+              </View>
             </View>
           </View>
 
           <View className="pb-20 items-center h-20">
-            {isCurrentlyListening && (
-              <Pressable
-                className="w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full"
-                onPress={handleStopListening}
-              >
-                <View className="w-[21px] h-[21px] bg-text-onPrimary rounded-sm" />
-              </Pressable>
-            )}
+            <Pressable
+              className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full ${isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
+              onPress={handleStopListening}
+            >
+              <View className="w-[21px] h-[21px] bg-text-onPrimary rounded-sm" />
+            </Pressable>
           </View>
         </View>
       </GradientLayout>
