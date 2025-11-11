@@ -15,6 +15,7 @@ const SourceLanguageSection = ({
   inputValue,
   setInputValue,
   isTranscriptAvailable,
+  hasPremiumFeature,
 }: SourceLanguageSectionProps) => {
   const { t, i18n } = useTranslation()
   const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
@@ -53,7 +54,7 @@ const SourceLanguageSection = ({
             <ChevronUpAndDownIcon width={9} height={13} color="#000" />
           </Pressable>
           <Pressable
-            disabled={!isTranscriptAvailable}
+            disabled={!isTranscriptAvailable && !hasPremiumFeature}
             className="flex-row items-center"
             onPress={handleStartListening}
           >
@@ -61,9 +62,9 @@ const SourceLanguageSection = ({
               width={20}
               opacity={isListening ? 0 : 1}
               height={20}
-              color={!isTranscriptAvailable ? '#9CA3AF' : '#000000'}
+              color={!isTranscriptAvailable && !hasPremiumFeature ? '#9CA3AF' : '#000000'}
             />
-            {!isTranscriptAvailable && (
+            {!isTranscriptAvailable && !hasPremiumFeature && (
               <Pressable onPress={() => setIsVoiceUnavailableOpen(true)}>
                 <InfoIcon width={23} height={23} color="#9CA3AF" />
               </Pressable>

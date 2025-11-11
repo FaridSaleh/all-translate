@@ -9,4 +9,5 @@ export default interface SourceLanguageSectionProps {
   inputValue: string
   setInputValue: (value: string) => void
   isTranscriptAvailable: boolean
+  hasPremiumFeature: boolean
 }

@@ -70,8 +70,6 @@ const LanguageBottomSheet = ({
   }, [configuration?.supportedLanguages, searchQuery, languageType, t])
 
   const handleLanguageSelect = (language: { id: string; name: string }) => {
-    console.log('Selected language:', language)
-
     if (languageType === 'source') {
       setSourceLanguage(language)
     } else {

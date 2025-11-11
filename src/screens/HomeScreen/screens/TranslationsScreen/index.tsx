@@ -7,8 +7,10 @@ import OptionalUpdateModal from '../../components/OptionalUpdateModal'
 import SourceLanguageSection from './components/SourceLanguageSection'
 import TargetLanguageSection from './components/TargetLanguageSection'
 import { LanguageType } from './type'
+import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { useTextToTextRequest } from '@/apis/translate/textToText'
 import { SwapIcon } from '@/assets'
+import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useSpeechToText from '@/hooks/useSpeechToText'
 import useConfigurationStore from '@/store/configuration'
 
@@ -34,7 +36,17 @@ const TranslationsScreen = () => {
     // isTranscriptAvailable,
   } = useSpeechToText()
 
+  const {
+    isRecording,
+    startRecording,
+    stopRecording,
+    reset: resetAudioRecorder,
+  } = useAudioRecorder()
+
   const { mutate: translateText } = useTextToTextRequest()
+  const { mutate: transcriptSpeech } = useSpeechToTextRequest()
+
+  const isCurrentlyListening = isListening || isRecording
 
   const handleTranslateText = async () => {
     translateText(
@@ -71,7 +83,7 @@ const TranslationsScreen = () => {
     if (!hasPremiumFeature && !transcriptAvailabilityCheck(sourceLanguage.id)) {
       return
     } else if (hasPremiumFeature) {
-      // TODO: Implement premium feature
+      await startRecording()
     } else {
       await startListening(sourceLanguage.id)
     }
@@ -81,7 +93,28 @@ const TranslationsScreen = () => {
     if (!hasPremiumFeature && !transcriptAvailabilityCheck(sourceLanguage.id)) {
       return
     } else if (hasPremiumFeature) {
-      // TODO: Implement premium feature
+      const path = await stopRecording()
+      if (path) {
+        const file = new FormData()
+        file.append('audio', {
+          uri: path,
+          name: path.split('/').pop() || 'recording.m4a',
+        })
+
+        transcriptSpeech(
+          {
+            sourceLang: sourceLanguage.id === 'detect' ? undefined : sourceLanguage.id,
+            targetLang: targetLanguage.id,
+            file,
+          },
+          {
+            onSuccess(data) {
+              setSourceText(data.transcribedText)
+              setTargetText(data.translatedText)
+            },
+          },
+        )
+      }
     } else {
       await stopListening()
     }
@@ -97,6 +130,9 @@ const TranslationsScreen = () => {
   const clearTexts = () => {
     setSourceText('')
     setTargetText('')
+    if (hasPremiumFeature) {
+      resetAudioRecorder()
+    }
   }
 
   return (
@@ -110,11 +146,12 @@ const TranslationsScreen = () => {
                 setOpenLanguageModal={setOpenLanguageModal}
                 handleStartListening={handleStartListening}
                 handleStopListening={handleStopListening}
-                isListening={isListening}
+                isListening={isCurrentlyListening}
                 inputValue={sourceText}
                 setInputValue={setSourceText}
                 // isTranscriptAvailable={isTranscriptAvailable}
                 isTranscriptAvailable={transcriptAvailabilityCheck(sourceLanguage.id)}
+                hasPremiumFeature={hasPremiumFeature}
               />
 
               <View className="flex-row items-center">
@@ -132,7 +169,7 @@ const TranslationsScreen = () => {
                 language={targetLanguage}
                 setOpenLanguageModal={setOpenLanguageModal}
                 textValue={targetText}
-                isListening={isListening}
+                isListening={isCurrentlyListening}
                 isTranscriptAvailable={transcriptAvailabilityCheck(targetLanguage.id)}
                 handleSwapLanguages={handleSwapLanguages}
               />
@@ -164,7 +201,7 @@ const TranslationsScreen = () => {
           </View>
 
           <View className="pb-20 items-center h-20">
-            {isListening && (
+            {isCurrentlyListening && (
               <Pressable
                 className="w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full"
                 onPress={handleStopListening}
