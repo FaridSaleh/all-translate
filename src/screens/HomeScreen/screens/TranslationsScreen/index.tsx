@@ -4,15 +4,14 @@ import { useTranslation } from 'react-i18next'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
-import SourceLanguageSection from './components/SourceLanguageSection'
-import TargetLanguageSection from './components/TargetLanguageSection'
+import SourceLanguage from './components/SourceLanguage'
+import TargetLanguage from './components/TargetLanguage'
 import { LanguageType } from './type'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { useTextToTextRequest } from '@/apis/translate/textToText'
 import { SwapIcon } from '@/assets'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useSpeechToText from '@/hooks/useSpeechToText'
-import useTextToSpeech from '@/hooks/useTextToSpeech'
 import useConfigurationStore from '@/store/configuration'
 
 const TranslationsScreen = () => {
@@ -43,13 +42,6 @@ const TranslationsScreen = () => {
     stopRecording,
     reset: resetAudioRecorder,
   } = useAudioRecorder()
-
-  const {
-    isSpeaking,
-    speak: speakText,
-    stop: stopSpeaking,
-    checkLanguageSupport: checkTtsLanguageSupport,
-  } = useTextToSpeech()
 
   const { mutate: translateText } = useTextToTextRequest()
   const { mutate: transcriptSpeech } = useSpeechToTextRequest()
@@ -149,23 +141,13 @@ const TranslationsScreen = () => {
     }
   }
 
-  const handleSpeakTargetText = async () => {
-    if (targetText && targetText.trim().length > 0) {
-      if (isSpeaking) {
-        await stopSpeaking()
-      } else {
-        await speakText(targetText, targetLanguage.id)
-      }
-    }
-  }
-
   return (
     <>
       <GradientLayout>
         <View className="flex-1 p-6">
           <View className="flex-1">
             <View className="bg-bg-card rounded-2xl p-4">
-              <SourceLanguageSection
+              <SourceLanguage
                 language={sourceLanguage}
                 setOpenLanguageModal={setOpenLanguageModal}
                 handleStartListening={handleStartListening}
@@ -175,7 +157,7 @@ const TranslationsScreen = () => {
                 setInputValue={setSourceText}
                 // isTranscriptAvailable={isTranscriptAvailable}
                 isTranscriptAvailable={transcriptAvailabilityCheck(sourceLanguage.id)}
-                hasPremiumFeature={hasPremiumFeature}
+                showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
               />
 
               <View className="flex-row items-center">
@@ -190,15 +172,13 @@ const TranslationsScreen = () => {
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
               </View>
 
-              <TargetLanguageSection
+              <TargetLanguage
                 language={targetLanguage}
                 setOpenLanguageModal={setOpenLanguageModal}
                 textValue={targetText}
                 isListening={isCurrentlyListening}
                 isTranscriptAvailable={transcriptAvailabilityCheck(targetLanguage.id)}
                 handleSwapLanguages={handleSwapLanguages}
-                onSpeak={handleSpeakTargetText}
-                checkTtsLanguageSupport={checkTtsLanguageSupport}
                 showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
               />
 

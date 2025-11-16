@@ -1,6 +1,6 @@
 import { LanguageType } from '../../type'
 
-export default interface SourceLanguageSectionProps {
+export default interface SourceLanguageProps {
   setOpenLanguageModal: (value: 'source' | 'target' | false) => void
   language: LanguageType
   handleStartListening: () => void
@@ -9,5 +9,5 @@ export default interface SourceLanguageSectionProps {
   inputValue: string
   setInputValue: (value: string) => void
   isTranscriptAvailable: boolean
-  hasPremiumFeature: boolean
+  showTextToSpeechIcon: boolean
 }

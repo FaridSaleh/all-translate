@@ -2,11 +2,13 @@ import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { useTranslation } from 'react-i18next'
+import SpeechToText from '../SpeechToText'
+import TextToSpeech from '../TextToSpeech'
 import VoiceUnavailableBottomSheet from '../VoiceUnavailableBottomSheet'
-import SourceLanguageSectionProps from './type'
-import { ChevronUpAndDownIcon, InfoIcon, MicrophoneIcon, PasteIcon } from '@/assets'
+import SourceLanguageProps from './type'
+import { ChevronUpAndDownIcon, PasteIcon } from '@/assets'
 
-const SourceLanguageSection = ({
+const SourceLanguage = ({
   language,
   setOpenLanguageModal,
   handleStartListening,
@@ -15,8 +17,8 @@ const SourceLanguageSection = ({
   inputValue,
   setInputValue,
   isTranscriptAvailable,
-  hasPremiumFeature,
-}: SourceLanguageSectionProps) => {
+  showTextToSpeechIcon,
+}: SourceLanguageProps) => {
   const { t, i18n } = useTranslation()
   const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
 
@@ -53,23 +55,23 @@ const SourceLanguageSection = ({
             <Text className="text-[14px] font-medium text-text-primary">{language.name}</Text>
             <ChevronUpAndDownIcon width={9} height={13} color="#000" />
           </Pressable>
-          <Pressable
-            disabled={!isTranscriptAvailable && !hasPremiumFeature}
-            className="flex-row items-center"
-            onPress={handleStartListening}
-          >
-            <MicrophoneIcon
-              width={20}
-              opacity={isListening ? 0 : 1}
-              height={20}
-              color={!isTranscriptAvailable && !hasPremiumFeature ? '#9CA3AF' : '#000000'}
+          <View className="flex-row items-center">
+            <SpeechToText
+              type="source"
+              show={!showTextToSpeechIcon}
+              onPress={handleStartListening}
+              isListening={isListening}
+              isTranscriptAvailable={isTranscriptAvailable}
+              languageName={language.name}
             />
-            {!isTranscriptAvailable && !hasPremiumFeature && (
-              <Pressable onPress={() => setIsVoiceUnavailableOpen(true)}>
-                <InfoIcon width={23} height={23} color="#9CA3AF" />
-              </Pressable>
-            )}
-          </Pressable>
+
+            <TextToSpeech
+              type="source"
+              show={showTextToSpeechIcon}
+              textValue={inputValue}
+              targetLanguage={language}
+            />
+          </View>
         </View>
         <TextInput
           className="text-[17px] font-bold text-text-primary bg-[transparent]"
@@ -98,4 +100,4 @@ const SourceLanguageSection = ({
   )
 }
 
-export default SourceLanguageSection
+export default SourceLanguage
