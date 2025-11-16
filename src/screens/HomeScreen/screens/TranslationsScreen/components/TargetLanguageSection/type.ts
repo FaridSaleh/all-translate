@@ -7,4 +7,7 @@ export default interface TargetLanguageSectionProps {
   isListening: boolean
   isTranscriptAvailable: boolean
   handleSwapLanguages: () => void
+  onSpeak: () => void
+  checkTtsLanguageSupport: (language: string) => Promise<boolean>
+  showTextToSpeechIcon: boolean
 }

@@ -12,6 +12,7 @@ import { useTextToTextRequest } from '@/apis/translate/textToText'
 import { SwapIcon } from '@/assets'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useSpeechToText from '@/hooks/useSpeechToText'
+import useTextToSpeech from '@/hooks/useTextToSpeech'
 import useConfigurationStore from '@/store/configuration'
 
 const TranslationsScreen = () => {
@@ -42,6 +43,13 @@ const TranslationsScreen = () => {
     stopRecording,
     reset: resetAudioRecorder,
   } = useAudioRecorder()
+
+  const {
+    isSpeaking,
+    speak: speakText,
+    stop: stopSpeaking,
+    checkLanguageSupport: checkTtsLanguageSupport,
+  } = useTextToSpeech()
 
   const { mutate: translateText } = useTextToTextRequest()
   const { mutate: transcriptSpeech } = useSpeechToTextRequest()
@@ -141,6 +149,16 @@ const TranslationsScreen = () => {
     }
   }
 
+  const handleSpeakTargetText = async () => {
+    if (targetText && targetText.trim().length > 0) {
+      if (isSpeaking) {
+        await stopSpeaking()
+      } else {
+        await speakText(targetText, targetLanguage.id)
+      }
+    }
+  }
+
   return (
     <>
       <GradientLayout>
@@ -179,14 +197,17 @@ const TranslationsScreen = () => {
                 isListening={isCurrentlyListening}
                 isTranscriptAvailable={transcriptAvailabilityCheck(targetLanguage.id)}
                 handleSwapLanguages={handleSwapLanguages}
+                onSpeak={handleSpeakTargetText}
+                checkTtsLanguageSupport={checkTtsLanguageSupport}
+                showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
               />
 
               <View
-                className={`flex-1 border-t border-bg-buttonDisabled mb-[18px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+                className={`flex-1 border-t border-bg-buttonDisabled mb-[18px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
               />
               <View className="flex-row items-center justify-between">
                 <Pressable
-                  className={`h-[31px] justify-center rounded-[6px] p-[6px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+                  className={`h-[31px] justify-center rounded-[6px] p-[6px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
                   onPress={clearTexts}
                 >
                   <Text className="text-[16px] font-regular text-primary-main text-center">
@@ -194,7 +215,7 @@ const TranslationsScreen = () => {
                   </Text>
                 </Pressable>
                 <Pressable
-                  className={`h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px] ${sourceText.length > 0 ? 'opacity-100' : 'opacity-0'}`}
+                  className={`h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
                   onPress={handleTranslateText}
                 >
                   <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
