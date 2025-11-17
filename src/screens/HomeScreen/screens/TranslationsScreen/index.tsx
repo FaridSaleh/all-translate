@@ -33,7 +33,6 @@ const TranslationsScreen = () => {
     startListening,
     stopListening,
     transcriptAvailabilityCheck,
-    // isTranscriptAvailable,
   } = useSpeechToText()
 
   const {
@@ -71,14 +70,6 @@ const TranslationsScreen = () => {
 
     return () => clearTimeout(timeout)
   }, [])
-
-  // useEffect(() => {
-  //   setSourceText('')
-  //   const checkLanguageAvailability = async () => {
-  //     await transcriptAvailabilityCheck(sourceLanguage.id)
-  //   }
-  //   checkLanguageAvailability()
-  // }, [sourceLanguage.id])
 
   const handleStartListening = async () => {
     if (!hasPremiumFeature && !transcriptAvailabilityCheck(sourceLanguage.id)) {
@@ -155,7 +146,6 @@ const TranslationsScreen = () => {
                 isListening={isCurrentlyListening}
                 inputValue={sourceText}
                 setInputValue={setSourceText}
-                // isTranscriptAvailable={isTranscriptAvailable}
                 isTranscriptAvailable={transcriptAvailabilityCheck(sourceLanguage.id)}
                 showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
               />
