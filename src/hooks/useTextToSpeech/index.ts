@@ -1,5 +1,7 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useState, useRef } from 'react'
 import { Platform } from 'react-native'
+import RNFS from 'react-native-fs'
+import { useSound } from 'react-native-nitro-sound'
 import Tts from 'react-native-tts'
 
 interface VoiceType {
@@ -12,6 +14,39 @@ interface VoiceType {
   notInstalled?: boolean
 }
 
+const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
+  const bytes = new Uint8Array(buffer)
+  let binary = ''
+  for (let i = 0; i < bytes.length; i++) {
+    binary += String.fromCharCode(bytes[i])
+  }
+
+  // Simple base64 encoding
+  const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/'
+  let result = ''
+  let i = 0
+
+  while (i < binary.length) {
+    const a = binary.charCodeAt(i++)
+    const b = i < binary.length ? binary.charCodeAt(i++) : 0
+    const c = i < binary.length ? binary.charCodeAt(i++) : 0
+
+    // eslint-disable-next-line no-bitwise
+    const bitmap = (a << 16) | (b << 8) | c
+
+    // eslint-disable-next-line no-bitwise
+    result += chars.charAt((bitmap >> 18) & 63)
+    // eslint-disable-next-line no-bitwise
+    result += chars.charAt((bitmap >> 12) & 63)
+    // eslint-disable-next-line no-bitwise
+    result += i - 2 < binary.length ? chars.charAt((bitmap >> 6) & 63) : '='
+    // eslint-disable-next-line no-bitwise
+    result += i - 1 < binary.length ? chars.charAt(bitmap & 63) : '='
+  }
+
+  return result
+}
+
 interface UseTextToSpeechDto {
   isSpeaking: boolean
   isAvailable: boolean
@@ -19,12 +54,26 @@ interface UseTextToSpeechDto {
   speak: (text: string, language?: string) => Promise<void>
   stop: () => Promise<void>
   checkLanguageSupport: (language: string) => Promise<boolean>
+  playAudioFromArrayBuffer: (audioData: ArrayBuffer) => Promise<void>
 }
 
 const useTextToSpeech = (): UseTextToSpeechDto => {
   const [isSpeaking, setIsSpeaking] = useState(false)
   const [isAvailable, setIsAvailable] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const currentAudioFileRef = useRef<string | null>(null)
+
+  const audioPlayer = useSound({
+    onPlaybackEnd: () => {
+      if (currentAudioFileRef.current) {
+        RNFS.unlink(currentAudioFileRef.current).catch(() => {
+          // Silently handle cleanup errors
+        })
+        currentAudioFileRef.current = null
+      }
+      setIsSpeaking(false)
+    },
+  })
 
   useEffect(() => {
     if (Platform.OS !== 'ios') {
@@ -114,6 +163,35 @@ const useTextToSpeech = (): UseTextToSpeechDto => {
     }
   }
 
+  const playAudioFromArrayBuffer = async (audioData: ArrayBuffer): Promise<void> => {
+    try {
+      setError(null)
+      setIsSpeaking(true)
+
+      if (!audioData || audioData.byteLength === 0) {
+        setError('Audio data is empty')
+        setIsSpeaking(false)
+        return
+      }
+
+      const base64 = arrayBufferToBase64(audioData)
+
+      const tempDir = Platform.OS === 'ios' ? RNFS.TemporaryDirectoryPath : RNFS.CachesDirectoryPath
+      const fileName = `audio_${Date.now()}.mp3`
+      const filePath = `${tempDir}/${fileName}`
+      await RNFS.writeFile(filePath, base64, 'base64')
+      currentAudioFileRef.current = filePath
+      await audioPlayer.startPlayer(filePath)
+    } catch (err: any) {
+      setError(err?.message || 'Failed to play audio')
+      setIsSpeaking(false)
+      if (currentAudioFileRef.current) {
+        RNFS.unlink(currentAudioFileRef.current).catch(() => {})
+        currentAudioFileRef.current = null
+      }
+    }
+  }
+
   return {
     isSpeaking,
     isAvailable,
@@ -121,6 +199,7 @@ const useTextToSpeech = (): UseTextToSpeechDto => {
     speak,
     stop,
     checkLanguageSupport,
+    playAudioFromArrayBuffer,
   }
 }
 

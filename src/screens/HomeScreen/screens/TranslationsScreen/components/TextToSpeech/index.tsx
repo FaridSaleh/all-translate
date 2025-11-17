@@ -20,6 +20,7 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
     speak: speakText,
     stop: stopSpeaking,
     checkLanguageSupport: checkTtsLanguageSupport,
+    playAudioFromArrayBuffer,
   } = useTextToSpeech()
 
   useEffect(() => {
@@ -45,20 +46,9 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
           targetLang: targetLanguage.id,
         },
         {
-          onSuccess(data) {
-            console.log('Audio data received!')
-            console.log('Type:', typeof data)
-            console.log('Is ArrayBuffer:', data instanceof ArrayBuffer)
-            console.log('Byte length:', data?.byteLength || 0)
-
+          onSuccess: async data => {
             if (data instanceof ArrayBuffer && data.byteLength > 0) {
-              // Verify we have audio data
-              const bytes = new Uint8Array(data)
-              console.log('First 10 bytes:', Array.from(bytes.slice(0, 10)))
-              console.log('Audio data is ready to play!')
-
-              // TODO: Play the audio using the ArrayBuffer
-              // You'll need to save it to a file and play it, or use a library that supports ArrayBuffer
+              await playAudioFromArrayBuffer(data)
             } else {
               console.log('Unexpected data type or empty data:', data)
             }
