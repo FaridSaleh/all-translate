@@ -1,14 +1,10 @@
 import { Pressable, Text, View } from 'react-native'
 import { Trans, useTranslation } from 'react-i18next'
-import { VoiceUnavailableBottomSheetProps } from './type'
+import TextToSpeechBottomSheetProps from './type'
 import { ArrowRightIcon, LockIcon } from '@/assets'
 import { BottomSheet } from '@/components'
 
-const VoiceUnavailableBottomSheet = ({
-  open,
-  setOpen,
-  languageName,
-}: VoiceUnavailableBottomSheetProps) => {
+const TextToSpeechBottomSheet = ({ open, setOpen, languageName }: TextToSpeechBottomSheetProps) => {
   const { t } = useTranslation()
 
   return (
@@ -16,20 +12,20 @@ const VoiceUnavailableBottomSheet = ({
       <View className="px-[34px] py-[16px] gap-[24px]">
         <View className="items-center">
           <LockIcon width={24} height={24} color="#1E4FDB" />
-          <Text className="text-[14px] font-bold mt-[14px] w-[130px] text-center">
-            {t('TranslationsScreen.voice_translation_not_available.title')}
+          <Text className="text-[14px] font-bold mt-[14px] text-center">
+            {t('TranslationsScreen.text_to_speech_not_available.title')}
           </Text>
         </View>
         <View className="px-[24px] py-[16px]">
           <Text className="text-[14px] font-regular">
             <Trans
-              i18nKey="TranslationsScreen.voice_translation_not_available.description_1"
+              i18nKey="TranslationsScreen.text_to_speech_not_available.description_1"
               components={{ bold: <Text className="font-semibold" /> }}
             />
           </Text>
           <Text className="text-[14px] font-regular">
             <Trans
-              i18nKey="TranslationsScreen.voice_translation_not_available.description_2"
+              i18nKey="TranslationsScreen.text_to_speech_not_available.description_2"
               values={{ language: languageName }}
               components={{
                 bold: <Text className="font-semibold text-primary-main" />,
@@ -55,7 +51,7 @@ const VoiceUnavailableBottomSheet = ({
           }}
         >
           <Text className="text-[16px] font-semibold text-bg-buttonPrimary text-center">
-            Cancel
+            {t('Common.cancel')}
           </Text>
         </Pressable>
       </View>
@@ -63,4 +59,4 @@ const VoiceUnavailableBottomSheet = ({
   )
 }
 
-export default VoiceUnavailableBottomSheet
+export default TextToSpeechBottomSheet

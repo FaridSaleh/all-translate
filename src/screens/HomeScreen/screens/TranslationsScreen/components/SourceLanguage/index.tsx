@@ -1,10 +1,8 @@
-import { useState } from 'react'
 import { Pressable, Text, TextInput, View } from 'react-native'
 import Clipboard from '@react-native-clipboard/clipboard'
 import { useTranslation } from 'react-i18next'
 import SpeechToText from '../SpeechToText'
 import TextToSpeech from '../TextToSpeech'
-import VoiceUnavailableBottomSheet from '../VoiceUnavailableBottomSheet'
 import SourceLanguageProps from './type'
 import { ChevronUpAndDownIcon, PasteIcon } from '@/assets'
 
@@ -20,7 +18,6 @@ const SourceLanguage = ({
   showTextToSpeechIcon,
 }: SourceLanguageProps) => {
   const { t, i18n } = useTranslation()
-  const [isVoiceUnavailableOpen, setIsVoiceUnavailableOpen] = useState(false)
 
   const handleInputChange = (text: string) => {
     setInputValue(text)
@@ -90,12 +87,6 @@ const SourceLanguage = ({
           </Text>
         </Pressable>
       </View>
-
-      <VoiceUnavailableBottomSheet
-        open={isVoiceUnavailableOpen}
-        setOpen={setIsVoiceUnavailableOpen}
-        languageName={language.name}
-      />
     </>
   )
 }

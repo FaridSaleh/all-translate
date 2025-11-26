@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { Pressable, View } from 'react-native'
-import VoiceUnavailableBottomSheet from '../VoiceUnavailableBottomSheet'
+import SpeechToTextBottomSheet from '../SpeechToTextBottomSheet'
 import SpeechToTextProps from './type'
 import { InfoIcon, MicrophoneIcon } from '@/assets'
 import useConfigurationStore from '@/store/configuration'
@@ -42,7 +42,7 @@ const SpeechToText = ({
         </Pressable>
       </View>
 
-      <VoiceUnavailableBottomSheet
+      <SpeechToTextBottomSheet
         open={isVoiceUnavailableOpen}
         setOpen={setIsVoiceUnavailableOpen}
         languageName={languageName}

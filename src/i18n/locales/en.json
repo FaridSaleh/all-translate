@@ -1,4 +1,7 @@
 {
+  "Common": {
+    "cancel": "Cancel"
+  },
   "SplashScreen": {
     "title": "All Translate",
     "subtitle": "AI Voice, Photo & Text Translator",
@@ -23,10 +26,15 @@
     "paste": "Paste",
     "translate": "Translate",
     "clear": "Clear",
-    "voice_translation_not_available": {
+    "speech_to_text_not_available": {
       "title": "Voice Translation Not Available",
       "description_1": "Voice translation for <bold>this language</bold> isn’t included in the free version.",
       "description_2": "Upgrade to access <bold>high-quality [{{language}}]</bold> voice translation, and unlock all other Pro features."
+    },
+    "text_to_speech_not_available": {
+      "title": "Voice Playback Locked",
+      "description_1": "The free version doesn’t include voice for <bold>this language</bold>.",
+      "description_2": "Upgrade to access <bold>Premium voice</bold>, and more features."
     }
   },
   "MultiLanguageTexts": {
