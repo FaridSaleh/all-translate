@@ -1,4 +1,4 @@
-import { LanguageType } from '../../type'
+import { LanguageType } from '@/screens/HomeScreen/type'
 
 export default interface TargetLanguageProps {
   language: LanguageType

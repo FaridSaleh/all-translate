@@ -1,13 +1,9 @@
 import { LanguageType } from '@/screens/HomeScreen/type'
 
-export default interface SourceLanguageProps {
+export default interface TargetLanguageProps {
   setOpenLanguageModal: (value: 'source' | 'target' | false) => void
   language: LanguageType
-  handleStartListening: () => void
-  handleStopListening: () => void
-  isListening: boolean
   inputValue: string
   setInputValue: (value: string) => void
-  isTranscriptAvailable: boolean
   showTextToSpeechIcon: boolean
 }

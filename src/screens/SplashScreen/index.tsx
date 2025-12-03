@@ -39,11 +39,11 @@ function SplashScreen() {
             onSuccess: configurationData => {
               setConfiguration(configurationData)
               setHasOptionalUpdate(configurationData.optionalUpdate)
-              if (configurationData.forceUpdate) {
-                setIsForceUpdateOpen(true)
-              } else {
-                navigation.replace('Home')
-              }
+              // if (configurationData.forceUpdate) {
+              //   setIsForceUpdateOpen(true)
+              // } else {
+              navigation.replace('Home')
+              // }
             },
           })
         },

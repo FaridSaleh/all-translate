@@ -1,4 +1,4 @@
-import { LanguageType } from '../../screens/TranslationsScreen/type'
+import { LanguageType } from '../../type'
 
 export default interface LanguageBottomSheetProps {
   open: 'source' | 'target' | false

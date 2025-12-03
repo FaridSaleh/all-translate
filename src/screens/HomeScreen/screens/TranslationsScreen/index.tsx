@@ -4,9 +4,9 @@ import { useTranslation } from 'react-i18next'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
+import { LanguageType } from '../../type'
 import SourceLanguage from './components/SourceLanguage'
 import TargetLanguage from './components/TargetLanguage'
-import { LanguageType } from './type'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { useTextToTextRequest } from '@/apis/translate/textToText'
 import { SwapIcon } from '@/assets'
@@ -150,7 +150,7 @@ const TranslationsScreen = () => {
                 showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
               />
 
-              <View className="flex-row items-center">
+              <View className="flex-row items-center mx-[10px] mb-[16px]">
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
                 <Pressable
                   className="w-[30px] h-[30px] bg-bg-base rounded-full items-center justify-center"
@@ -196,7 +196,7 @@ const TranslationsScreen = () => {
             </View>
           </View>
 
-          <View className="pb-20 items-center h-20">
+          <View className="pb-[40px] items-center h-[60px]">
             <Pressable
               className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full ${isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
               onPress={handleStopListening}

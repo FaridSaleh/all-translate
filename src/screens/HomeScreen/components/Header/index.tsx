@@ -14,10 +14,16 @@ const Header = ({ options }: BottomTabHeaderProps) => {
       className="bg-[#F4F8FF] flex-row items-center justify-between px-6 py-4"
     >
       <View className="w-14 items-start">
-        {configuration?.user.tire === 'Free' && (
-          <Text className="text-bg-badgeProBg text-[14px] font-semibold border border-bg-badgeProBg py-1 px-2 rounded-lg">
-            PRO
-          </Text>
+        {options.headerLeft ? (
+          options.headerLeft({})
+        ) : (
+          <>
+            {configuration?.user.tire === 'Free' && (
+              <Text className="text-bg-badgeProBg text-[14px] font-semibold border border-bg-badgeProBg py-1 px-2 rounded-lg">
+                PRO
+              </Text>
+            )}
+          </>
         )}
       </View>
       <View className="flex-row gap-1.5 items-center">

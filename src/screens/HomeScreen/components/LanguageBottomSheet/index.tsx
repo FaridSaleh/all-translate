@@ -19,11 +19,11 @@ const LanguageBottomSheet = ({
   const { t } = useTranslation()
   const { configuration } = useConfigurationStore()
   const [searchQuery, setSearchQuery] = useState('')
-  const [languageType, setLanguageType] = useState<'source' | 'target'>()
+  const [selectedType, setSelectedType] = useState<'source' | 'target'>()
 
   useEffect(() => {
     if (open) {
-      setLanguageType(open)
+      setSelectedType(open)
     }
   }, [open])
 
@@ -52,7 +52,7 @@ const LanguageBottomSheet = ({
 
     let languages = configuration.supportedLanguages
 
-    if (languageType === 'source') {
+    if (selectedType === 'source') {
       const detectLanguageOption = {
         id: 'detect',
         name: t('LanguageBottomSheet.detect_language'),
@@ -67,10 +67,10 @@ const LanguageBottomSheet = ({
     return languages.filter(language =>
       language.name.toLowerCase().includes(searchQuery.toLowerCase()),
     )
-  }, [configuration?.supportedLanguages, searchQuery, languageType, t])
+  }, [configuration?.supportedLanguages, searchQuery, selectedType, t])
 
   const handleLanguageSelect = (language: { id: string; name: string }) => {
-    if (languageType === 'source') {
+    if (selectedType === 'source') {
       setSourceLanguage(language)
     } else {
       setTargetLanguage(language)
@@ -115,21 +115,21 @@ const LanguageBottomSheet = ({
 
         <View className="flex-row items-center mb-4 p-1 bg-[#EEEEEF] rounded-[9px]">
           <Pressable
-            className={`flex-1 rounded-[7px] py-1 ${languageType === 'source' ? 'bg-text-onPrimary' : ''}`}
-            onPress={() => setLanguageType('source')}
+            className={`flex-1 rounded-[7px] py-1 ${selectedType === 'source' ? 'bg-text-onPrimary' : ''}`}
+            onPress={() => setSelectedType('source')}
           >
             <Text
-              className={`text-[13px] text-gray-800 text-center ${languageType === 'source' ? 'font-semibold' : 'font-normal'}`}
+              className={`text-[13px] text-gray-800 text-center ${selectedType === 'source' ? 'font-semibold' : 'font-normal'}`}
             >
               {sourceLanguage.name}
             </Text>
           </Pressable>
           <Pressable
-            className={`flex-1 rounded-[7px] py-1 ${languageType === 'target' ? 'bg-text-onPrimary' : ''}`}
-            onPress={() => setLanguageType('target')}
+            className={`flex-1 rounded-[7px] py-1 ${selectedType === 'target' ? 'bg-text-onPrimary' : ''}`}
+            onPress={() => setSelectedType('target')}
           >
             <Text
-              className={`text-[13px] text-gray-800 text-center ${languageType === 'target' ? 'font-semibold' : 'font-normal'}`}
+              className={`text-[13px] text-gray-800 text-center ${selectedType === 'target' ? 'font-semibold' : 'font-normal'}`}
             >
               {targetLanguage.name}
             </Text>
@@ -148,8 +148,8 @@ const LanguageBottomSheet = ({
                       onPress={() => handleLanguageSelect(item)}
                     >
                       <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
-                      {((languageType === 'source' && item.id === sourceLanguage.id) ||
-                        (languageType === 'target' && item.id === targetLanguage.id)) && (
+                      {((selectedType === 'source' && item.id === sourceLanguage.id) ||
+                        (selectedType === 'target' && item.id === targetLanguage.id)) && (
                         <CheckIcon width={24} height={24} color="#2563EB" />
                       )}
                     </Pressable>
@@ -175,8 +175,8 @@ const LanguageBottomSheet = ({
                 onPress={() => handleLanguageSelect(item)}
               >
                 <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
-                {((languageType === 'source' && item.id === sourceLanguage.id) ||
-                  (languageType === 'target' && item.id === targetLanguage.id)) && (
+                {((selectedType === 'source' && item.id === sourceLanguage.id) ||
+                  (selectedType === 'target' && item.id === targetLanguage.id)) && (
                   <CheckIcon width={24} height={24} color="#2563EB" />
                 )}
               </Pressable>

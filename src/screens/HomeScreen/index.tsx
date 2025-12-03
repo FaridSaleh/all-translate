@@ -1,6 +1,7 @@
 import { BottomTabHeaderProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { useTranslation } from 'react-i18next'
 import Header from './components/Header'
+import ConversationView from './components/Header/components/ConversationView'
 import ConversationScreen from './screens/ConversationScreen'
 import ImageScreen from './screens/ImageScreen'
 import TranslationsScreen from './screens/TranslationsScreen'
@@ -50,7 +51,9 @@ function HomeScreen() {
         name="TabTwo"
         component={ConversationScreen}
         options={{
+          title: t('HomeScreen.conversation'),
           tabBarLabel: t('HomeScreen.conversation'),
+          headerLeft: ConversationView,
           tabBarIcon: ({ color }) => makeTabIcon(MicrophoneIcon)({ color, width: 15, height: 20 }),
         }}
       />
