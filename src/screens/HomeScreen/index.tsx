@@ -1,7 +1,9 @@
-import { BottomTabHeaderProps, createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+/* eslint-disable react/no-unstable-nested-components */
+import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
+import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useTranslation } from 'react-i18next'
 import Header from './components/Header'
-import ConversationView from './components/Header/components/ConversationView'
+import ConversationFaceToFaceScreen from './screens/ConversationFaceToFaceScreen'
 import ConversationScreen from './screens/ConversationScreen'
 import ImageScreen from './screens/ImageScreen'
 import TranslationsScreen from './screens/TranslationsScreen'
@@ -14,11 +16,10 @@ const makeTabIcon =
     <Icon width={width} height={height} color={color} />
   )
 
-const HeaderComponent = (props: BottomTabHeaderProps) => <Header {...props} />
-
 const Tab = createBottomTabNavigator()
+const HomeStack = createNativeStackNavigator()
 
-function HomeScreen() {
+const HomeTabs = () => {
   const { t } = useTranslation()
 
   return (
@@ -35,37 +36,54 @@ function HomeScreen() {
           borderTopColor: '#4B5563',
           shadowColor: 'transparent',
         },
-        header: HeaderComponent,
       }}
     >
       <Tab.Screen
-        name="TabOne"
+        name="TranslationsTab"
         component={TranslationsScreen}
         options={{
           tabBarLabel: t('HomeScreen.text_and_voice'),
           tabBarIcon: ({ color }) =>
             makeTabIcon(ParagraphIcon)({ color, width: 21.65, height: 20.81 }),
+          header: () => <Header title={t('HomeScreen.title')} />,
         }}
       />
       <Tab.Screen
-        name="TabTwo"
+        name="ConversationTab"
         component={ConversationScreen}
         options={{
-          title: t('HomeScreen.conversation'),
           tabBarLabel: t('HomeScreen.conversation'),
-          headerLeft: ConversationView,
           tabBarIcon: ({ color }) => makeTabIcon(MicrophoneIcon)({ color, width: 15, height: 20 }),
+          header: () => (
+            <Header title={t('HomeScreen.conversation')} headerLeft="conversationView" />
+          ),
         }}
       />
       <Tab.Screen
-        name="TabThree"
+        name="ImageTab"
         component={ImageScreen}
         options={{
           tabBarLabel: t('HomeScreen.camera'),
           tabBarIcon: ({ color }) => makeTabIcon(CameraIcon)({ color, width: 22, height: 17 }),
+          header: () => <Header title={t('HomeScreen.camera')} />,
         }}
       />
     </Tab.Navigator>
+  )
+}
+
+function HomeScreen() {
+  return (
+    <HomeStack.Navigator screenOptions={{ contentStyle: { backgroundColor: '#FFFFFF' } }}>
+      <HomeStack.Screen name="HomeTabs" component={HomeTabs} options={{ headerShown: false }} />
+      <HomeStack.Screen
+        name="ConversationFaceToFace"
+        component={ConversationFaceToFaceScreen}
+        options={{
+          header: () => <Header headerLeft="none" headerRight="close" />,
+        }}
+      />
+    </HomeStack.Navigator>
   )
 }
 

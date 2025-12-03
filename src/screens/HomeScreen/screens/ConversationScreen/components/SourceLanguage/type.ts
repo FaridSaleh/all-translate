@@ -6,4 +6,5 @@ export default interface SourceLanguageProps {
   inputValue: string
   setInputValue: (value: string) => void
   showTextToSpeechIcon: boolean
+  isListening: boolean
 }

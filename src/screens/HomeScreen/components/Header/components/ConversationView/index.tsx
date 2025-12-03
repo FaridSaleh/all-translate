@@ -2,10 +2,12 @@ import { useState } from 'react'
 import { Pressable, Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { CheckIcon, FaceToFaceIcon, SideBySideIcon } from '@/assets'
+import { useAppNavigation } from '@/screens/helper'
 
 const ConversationView = () => {
-  const [isOpen, setIsOpen] = useState(false)
+  const navigation = useAppNavigation()
   const { t } = useTranslation()
+  const [isOpen, setIsOpen] = useState(false)
 
   return (
     <View className="relative">
@@ -41,7 +43,7 @@ const ConversationView = () => {
               className="flex-row items-center justify-between"
               onPress={() => {
                 setIsOpen(false)
-                // setConversationView('faceToFace')
+                navigation.navigate('ConversationFaceToFace')
               }}
             >
               <View className="flex-row items-center">

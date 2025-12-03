@@ -10,6 +10,7 @@ const SourceLanguage = ({
   inputValue,
   setInputValue,
   showTextToSpeechIcon,
+  isListening,
 }: SourceLanguageProps) => {
   const { t, i18n } = useTranslation()
 
@@ -22,6 +23,12 @@ const SourceLanguage = ({
   )
     ? t(`MultiLanguageTexts.microphone_placeholder.${language.id}`)
     : t('MultiLanguageTexts.microphone_placeholder.en')
+
+  const listeningPlaceholder = i18n.exists(
+    `MultiLanguageTexts.listening_placeholder.${language.id}`,
+  )
+    ? t(`MultiLanguageTexts.listening_placeholder.${language.id}`)
+    : t('MultiLanguageTexts.listening_placeholder.en')
 
   return (
     <>
@@ -45,7 +52,7 @@ const SourceLanguage = ({
         </View>
         <TextInput
           className="text-[17px] font-bold text-text-primary bg-[transparent]"
-          placeholder={microphonePlaceholder}
+          placeholder={isListening ? listeningPlaceholder : microphonePlaceholder}
           placeholderTextColor="#9CA3AF"
           value={inputValue}
           multiline

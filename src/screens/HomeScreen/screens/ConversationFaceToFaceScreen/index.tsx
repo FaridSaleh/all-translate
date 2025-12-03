@@ -1,18 +1,15 @@
-import { useEffect, useState } from 'react'
+import { useState } from 'react'
 import { Pressable, View } from 'react-native'
-import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import { LanguageType } from '../../type'
-import ConversationBottomSheet from './components/ConversationBottomSheet'
-import SourceLanguage from './components/SourceLanguage'
-import TargetLanguage from './components/TargetLanguage'
+import SourceLanguage from '../ConversationScreen/components/SourceLanguage'
+import TargetLanguage from '../ConversationScreen/components/TargetLanguage'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { MicrophoneIcon } from '@/assets'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
-import useConfigurationStore from '@/store/configuration'
+import GradientLayout from '@/screens/HomeScreen/components/GradientLayout'
 
-const ConversationScreen = () => {
-  const [isConversationModalOpen, setIsConversationModalOpen] = useState(false)
+const ConversationFaceToFaceScreen = () => {
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
   const [sourceLanguage, setSourceLanguage] = useState<LanguageType>({
     id: 'en',
@@ -22,16 +19,9 @@ const ConversationScreen = () => {
   const [sourceText, setSourceText] = useState('')
   const [targetText, setTargetText] = useState('')
 
-  const { hasPremiumFeature } = useConfigurationStore()
   const { isRecording, startRecording, stopRecording } = useAudioRecorder()
 
   const { mutate: transcriptSpeech } = useSpeechToTextRequest()
-
-  useEffect(() => {
-    if (!hasPremiumFeature) {
-      // setIsConversationModalOpen(true)
-    }
-  }, [hasPremiumFeature])
 
   const handleStartListening = async () => {
     await startRecording()
@@ -65,31 +55,18 @@ const ConversationScreen = () => {
   return (
     <>
       <GradientLayout>
-        <View className="flex-1 p-6">
-          <View className="flex-1">
-            <View className="bg-bg-card rounded-2xl p-4">
-              <SourceLanguage
-                language={sourceLanguage}
-                setOpenLanguageModal={setOpenLanguageModal}
-                inputValue={sourceText}
-                setInputValue={setSourceText}
-                showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
-                isListening={isRecording}
-              />
-
-              <View className="flex-1 border-t border-bg-buttonDisabled mx-[10px] mb-[19px]" />
-
-              <TargetLanguage
-                language={targetLanguage}
-                setOpenLanguageModal={setOpenLanguageModal}
-                inputValue={targetText}
-                setInputValue={setTargetText}
-                showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
-              />
-            </View>
+        <View className="flex-1 p-6 justify-center items-center mb-[105px]">
+          <View className="w-full bg-bg-card rounded-2xl p-4 rotate-180">
+            <TargetLanguage
+              language={targetLanguage}
+              setOpenLanguageModal={setOpenLanguageModal}
+              inputValue={targetText}
+              setInputValue={setTargetText}
+              showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
+            />
           </View>
 
-          <View className="pb-[40px] items-center h-[60px]">
+          <View className="pb-[40px] items-center h-[60px] my-[16px]">
             <Pressable
               className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full ${!isRecording ? 'opacity-100' : 'opacity-0'}`}
               onPress={handleStartListening}
@@ -104,6 +81,16 @@ const ConversationScreen = () => {
               <View className="w-[21px] h-[21px] bg-text-onPrimary rounded-sm" />
             </Pressable>
           </View>
+
+          <View className="w-full bg-bg-card rounded-2xl p-4">
+            <SourceLanguage
+              language={sourceLanguage}
+              setOpenLanguageModal={setOpenLanguageModal}
+              inputValue={sourceText}
+              setInputValue={setSourceText}
+              showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
+            />
+          </View>
         </View>
       </GradientLayout>
 
@@ -115,13 +102,8 @@ const ConversationScreen = () => {
         targetLanguage={targetLanguage}
         setTargetLanguage={setTargetLanguage}
       />
-
-      <ConversationBottomSheet
-        open={isConversationModalOpen}
-        setOpen={setIsConversationModalOpen}
-      />
     </>
   )
 }
 
-export default ConversationScreen
+export default ConversationFaceToFaceScreen
