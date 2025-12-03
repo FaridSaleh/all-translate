@@ -29,7 +29,7 @@ const ConversationScreen = () => {
 
   useEffect(() => {
     if (!hasPremiumFeature) {
-      setIsConversationModalOpen(true)
+      // setIsConversationModalOpen(true)
     }
   }, [hasPremiumFeature])
 

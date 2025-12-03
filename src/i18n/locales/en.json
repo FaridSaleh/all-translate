@@ -38,6 +38,11 @@
     }
   },
   "ConversationScreen": {
+    "view": {
+      "title": "View",
+      "side_by_side": "Side by Side",
+      "face_to_face": "Face to Face"
+    },
     "conversation_not_available": {
       "title": "Conversation Not Available",
       "description_1": "<bold>Real-time conversation</bold> isn’t included in the free version.",
