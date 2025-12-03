@@ -78,30 +78,35 @@ const useTextToSpeech = (): UseTextToSpeechDto => {
   useEffect(() => {
     if (Platform.OS !== 'ios') {
       Tts.setDefaultRate(0.5)
-    }
-    Tts.setDefaultPitch(1.0)
+      Tts.setDefaultPitch(1.0)
 
-    Tts.addEventListener('tts-start', () => {
-      setIsSpeaking(true)
-      setError(null)
-    })
+      Tts.addEventListener('tts-start', () => {
+        setIsSpeaking(true)
+        setError(null)
+      })
 
-    Tts.addEventListener('tts-finish', () => {
-      setIsSpeaking(false)
-    })
+      Tts.addEventListener('tts-finish', () => {
+        setIsSpeaking(false)
+      })
 
-    Tts.addEventListener('tts-cancel', () => {
-      setIsSpeaking(false)
-    })
+      Tts.addEventListener('tts-cancel', () => {
+        setIsSpeaking(false)
+      })
 
-    Tts.getInitStatus().then(() => {
+      Tts.getInitStatus().then(() => {
+        setIsAvailable(true)
+      })
+    } else {
+      // On iOS, mark the hook as available but do not touch the native TTS module.
       setIsAvailable(true)
-    })
+    }
 
     return () => {
-      Tts.stop().catch(() => {
-        // Silently handle errors during cleanup
-      })
+      if (Platform.OS !== 'ios') {
+        Tts.stop().catch(() => {
+          // Silently handle errors during cleanup
+        })
+      }
     }
   }, [])
 
