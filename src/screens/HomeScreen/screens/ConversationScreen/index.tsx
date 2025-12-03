@@ -85,6 +85,7 @@ const ConversationScreen = () => {
                 inputValue={targetText}
                 setInputValue={setTargetText}
                 showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
+                isListening={isRecording}
               />
             </View>
           </View>
