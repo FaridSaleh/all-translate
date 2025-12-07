@@ -1,33 +1,43 @@
 import { useMutation } from '@tanstack/react-query'
 import { postRequest } from '@/utils/api'
 
-export const POST_SPEECH_TO_TEXT_URL = (targetLang: string, sourceLang?: string) =>
-  `/api/Translate/speech-to-text?lang2=${targetLang}${sourceLang ? `&lang1=${sourceLang}` : ''}`
+export const POST_SPEECH_TO_TEXT_URL = '/api/Translate/speech-to-text'
 
 export interface PostSpeechToTextProps {
-  sourceLang?: string
-  targetLang: string
   file: FormData
+  targetLang: string
+  sourceLang?: string
+  autoDetect?: boolean
 }
 
 export interface PostSpeechToTextDto {
   transcribedText: string
   translatedText: string
-  lang1: string
-  lang2: string
+  sourceLang: string
+  targetLang: string
 }
 
 export const postSpeechToTextRequest = async ({
-  sourceLang,
-  targetLang,
   file,
-}: PostSpeechToTextProps) =>
-  (
+  targetLang,
+  sourceLang,
+  autoDetect,
+}: PostSpeechToTextProps) => {
+  file.append('targetLang', targetLang)
+  if (sourceLang) {
+    file.append('sourceLang', sourceLang)
+  }
+  if (autoDetect) {
+    file.append('autoDetect', 'true')
+  }
+
+  return (
     await postRequest<PostSpeechToTextDto>({
-      url: POST_SPEECH_TO_TEXT_URL(targetLang, sourceLang),
+      url: POST_SPEECH_TO_TEXT_URL,
       payload: file,
     })
   ).data
+}
 
 export function useSpeechToTextRequest() {
   return useMutation({

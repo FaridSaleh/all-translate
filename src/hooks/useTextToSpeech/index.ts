@@ -3,16 +3,7 @@ import { Platform } from 'react-native'
 import RNFS from 'react-native-fs'
 import { useSound } from 'react-native-nitro-sound'
 import Tts from 'react-native-tts'
-
-interface VoiceType {
-  id: string
-  name: string
-  language: string
-  quality?: number
-  latency?: number
-  networkConnectionRequired?: boolean
-  notInstalled?: boolean
-}
+import { UseTextToSpeechDto, VoiceType } from './type'
 
 const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
   const bytes = new Uint8Array(buffer)
@@ -45,16 +36,6 @@ const arrayBufferToBase64 = (buffer: ArrayBuffer): string => {
   }
 
   return result
-}
-
-interface UseTextToSpeechDto {
-  isSpeaking: boolean
-  isAvailable: boolean
-  error: string | null
-  speak: (text: string, language?: string) => Promise<void>
-  stop: () => Promise<void>
-  checkLanguageSupport: (language: string) => Promise<boolean>
-  playAudioFromArrayBuffer: (audioData: ArrayBuffer) => Promise<void>
 }
 
 const useTextToSpeech = (): UseTextToSpeechDto => {

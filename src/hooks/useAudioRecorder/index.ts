@@ -1,13 +1,7 @@
 import { useState, useRef } from 'react'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Sound from 'react-native-nitro-sound'
-
-interface UseAudioRecorderDto {
-  isRecording: boolean
-  startRecording: () => void
-  stopRecording: () => Promise<string | null>
-  reset: () => void
-}
+import UseAudioRecorderDto from './type'
 
 const useAudioRecorder = (): UseAudioRecorderDto => {
   const [isRecording, setIsRecording] = useState(false)

@@ -38,9 +38,10 @@ const ConversationFaceToFaceScreen = () => {
 
       transcriptSpeech(
         {
-          sourceLang: sourceLanguage.id,
-          targetLang: targetLanguage.id,
           file,
+          targetLang: targetLanguage.id,
+          sourceLang: sourceLanguage.id,
+          autoDetect: true,
         },
         {
           onSuccess(data) {

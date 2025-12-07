@@ -48,14 +48,20 @@ const ConversationScreen = () => {
 
       transcriptSpeech(
         {
-          sourceLang: sourceLanguage.id,
-          targetLang: targetLanguage.id,
           file,
+          targetLang: targetLanguage.id,
+          sourceLang: sourceLanguage.id,
+          autoDetect: true,
         },
         {
           onSuccess(data) {
-            setSourceText(data.transcribedText)
-            setTargetText(data.translatedText)
+            if (data.sourceLang === sourceLanguage.id) {
+              setSourceText(data.transcribedText)
+              setTargetText(data.translatedText)
+            } else {
+              setTargetText(data.transcribedText)
+              setSourceText(data.translatedText)
+            }
           },
         },
       )

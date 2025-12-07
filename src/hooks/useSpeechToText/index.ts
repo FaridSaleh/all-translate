@@ -2,19 +2,7 @@ import { useEffect, useState } from 'react'
 import { Platform, PermissionsAndroid } from 'react-native'
 import Voice, { SpeechResultsEvent, SpeechErrorEvent } from '@react-native-voice/voice'
 import { SUPPORTED_LANGUAGES } from './consts'
-
-interface UseSpeechToTextDto {
-  isListening: boolean
-  isAvailable: boolean
-  result: string
-  setResult: (result: string) => void
-  error: string | null
-  startListening: (language: string) => Promise<void>
-  stopListening: () => Promise<void>
-  reset: () => void
-  transcriptAvailabilityCheck: (language: string) => boolean
-  // isTranscriptAvailable: boolean
-}
+import UseSpeechToTextDto from './type'
 
 const useSpeechToText = (): UseSpeechToTextDto => {
   const [isListening, setIsListening] = useState(false)
