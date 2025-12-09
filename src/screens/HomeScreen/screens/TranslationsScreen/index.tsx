@@ -95,9 +95,10 @@ const TranslationsScreen = () => {
 
         transcriptSpeech(
           {
-            sourceLang: sourceLanguage.id === 'detect' ? undefined : sourceLanguage.id,
-            targetLang: targetLanguage.id,
             file,
+            targetLang: targetLanguage.id,
+            sourceLang: sourceLanguage.id === 'detect' ? undefined : sourceLanguage.id,
+            autoDetect: sourceLanguage.id === 'detect',
           },
           {
             onSuccess(data) {
