@@ -1,8 +1,9 @@
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import ConversationView from './components/ConversationView'
 import { HeaderLeftProps, HeaderProps, HeaderRightProps } from './type'
 import { CloseIcon, SettingIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 import { useAppNavigation } from '@/screens/helper'
 import useConfigurationStore from '@/store/configuration'
 
@@ -37,9 +38,9 @@ const HeaderRight = ({ headerRight }: HeaderRightProps) => {
 
     case 'close':
       return (
-        <Pressable onPress={() => navigation.goBack()}>
+        <RipplePressable borderless onPress={() => navigation.goBack()}>
           <CloseIcon width={15} height={15} color="#000" />
-        </Pressable>
+        </RipplePressable>
       )
 
     default:

@@ -1,8 +1,9 @@
-import { Pressable, Text, TextInput, View } from 'react-native'
+import { Text, TextInput, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import TextToSpeech from '../TextToSpeech'
 import SourceLanguageProps from './type'
 import { ChevronUpAndDownIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 
 const SourceLanguage = ({
   language,
@@ -34,13 +35,13 @@ const SourceLanguage = ({
     <>
       <View className="min-h-[90px] gap-[16px]">
         <View className="flex-row items-center justify-between">
-          <Pressable
+          <RipplePressable
             className="flex-row items-center gap-2"
             onPress={() => setOpenLanguageModal('source')}
           >
             <Text className="text-[14px] font-medium text-text-primary">{language.name}</Text>
             <ChevronUpAndDownIcon width={9} height={13} color="#000" />
-          </Pressable>
+          </RipplePressable>
           <View className="flex-row items-center">
             <TextToSpeech
               type="source"

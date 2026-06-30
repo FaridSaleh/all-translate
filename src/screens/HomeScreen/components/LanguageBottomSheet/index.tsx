@@ -1,9 +1,9 @@
 import { useState, useMemo, useEffect } from 'react'
-import { Pressable, Text, View, TextInput, FlatList, ScrollView } from 'react-native'
+import { Text, View, TextInput, FlatList, ScrollView } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import LanguageBottomSheetProps from './type'
 import { CheckIcon, SearchIcon } from '@/assets'
-import { BottomSheet } from '@/components'
+import { BottomSheet, RipplePressable } from '@/components'
 import useConfigurationStore from '@/store/configuration'
 
 const ItemSeparatorComponent = () => <View className="h-[1px] w-full bg-[#EDEDED]" />
@@ -89,11 +89,11 @@ const LanguageBottomSheet = ({
             {t('LanguageBottomSheet.done')}
           </Text>
           <Text className="text-[16px] font-bold">{t('LanguageBottomSheet.title')}</Text>
-          <Pressable onPress={() => setOpen(false)}>
+          <RipplePressable onPress={() => setOpen(false)}>
             <Text className="text-[14px] font-semibold text-primary-main">
               {t('LanguageBottomSheet.done')}
             </Text>
-          </Pressable>
+          </RipplePressable>
         </View>
 
         <View className="mb-4">
@@ -114,7 +114,7 @@ const LanguageBottomSheet = ({
         </View>
 
         <View className="flex-row items-center mb-4 p-1 bg-[#EEEEEF] rounded-[9px]">
-          <Pressable
+          <RipplePressable
             className={`flex-1 rounded-[7px] py-1 ${selectedType === 'source' ? 'bg-text-onPrimary' : ''}`}
             onPress={() => setSelectedType('source')}
           >
@@ -123,8 +123,8 @@ const LanguageBottomSheet = ({
             >
               {sourceLanguage.name}
             </Text>
-          </Pressable>
-          <Pressable
+          </RipplePressable>
+          <RipplePressable
             className={`flex-1 rounded-[7px] py-1 ${selectedType === 'target' ? 'bg-text-onPrimary' : ''}`}
             onPress={() => setSelectedType('target')}
           >
@@ -133,7 +133,7 @@ const LanguageBottomSheet = ({
             >
               {targetLanguage.name}
             </Text>
-          </Pressable>
+          </RipplePressable>
         </View>
 
         <ScrollView>
@@ -143,7 +143,7 @@ const LanguageBottomSheet = ({
               <View className="bg-bg-elevated rounded-2xl px-6 py-4 mb-4">
                 {popularLanguages.map((item, index) => (
                   <View key={item.id}>
-                    <Pressable
+                    <RipplePressable
                       className="flex-row items-center py-3 gap-2"
                       onPress={() => handleLanguageSelect(item)}
                     >
@@ -152,7 +152,7 @@ const LanguageBottomSheet = ({
                         (selectedType === 'target' && item.id === targetLanguage.id)) && (
                         <CheckIcon width={24} height={24} color="#2563EB" />
                       )}
-                    </Pressable>
+                    </RipplePressable>
                     {index < popularLanguages.length - 1 && <ItemSeparatorComponent />}
                   </View>
                 ))}
@@ -170,7 +170,7 @@ const LanguageBottomSheet = ({
             showsVerticalScrollIndicator={false}
             ItemSeparatorComponent={ItemSeparatorComponent}
             renderItem={({ item }) => (
-              <Pressable
+              <RipplePressable
                 className="flex-row items-center py-3 gap-2"
                 onPress={() => handleLanguageSelect(item)}
               >
@@ -179,7 +179,7 @@ const LanguageBottomSheet = ({
                   (selectedType === 'target' && item.id === targetLanguage.id)) && (
                   <CheckIcon width={24} height={24} color="#2563EB" />
                 )}
-              </Pressable>
+              </RipplePressable>
             )}
             ListEmptyComponent={
               <View className="py-8 items-center">

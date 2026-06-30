@@ -2,6 +2,7 @@
 module.exports = {
   content: ['./App.tsx', './src/**/*.{js,jsx,ts,tsx}'],
   presets: [require('nativewind/preset')],
+  safelist: ['active:opacity-60', 'active:opacity-70', 'active:opacity-80', 'active:bg-black/5'],
   theme: {
     colors: {
       primary: {

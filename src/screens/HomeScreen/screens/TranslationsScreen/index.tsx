@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { InteractionManager, Pressable, Text, View } from 'react-native'
+import { InteractionManager, Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
@@ -10,6 +10,7 @@ import TargetLanguage from './components/TargetLanguage'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { useTextToTextRequest } from '@/apis/translate/textToText'
 import { SwapIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useSpeechToText from '@/hooks/useSpeechToText'
 import useConfigurationStore from '@/store/configuration'
@@ -153,13 +154,14 @@ const TranslationsScreen = () => {
 
               <View className="flex-row items-center mx-[10px] mb-[16px]">
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
-                <Pressable
-                  className="w-[30px] h-[30px] bg-bg-base rounded-full items-center justify-center"
+                <RipplePressable
+                  borderless
+                  className="w-[30px] h-[30px] bg-bg-base rounded-full items-center justify-center overflow-hidden"
                   onPress={isSwapping ? undefined : handleSwapLanguages}
                   disabled={isSwapping}
                 >
                   <SwapIcon width={15} height={12} color="#1D4ED8" />
-                </Pressable>
+                </RipplePressable>
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
               </View>
 
@@ -177,33 +179,35 @@ const TranslationsScreen = () => {
                 className={`flex-1 border-t border-bg-buttonDisabled mb-[18px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
               />
               <View className="flex-row items-center justify-between">
-                <Pressable
-                  className={`h-[31px] justify-center rounded-[6px] p-[6px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
+                <RipplePressable
+                  className={`h-[31px] justify-center rounded-[6px] p-[6px] overflow-hidden ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
                   onPress={clearTexts}
                 >
                   <Text className="text-[16px] font-regular text-primary-main text-center">
                     {t('TranslationsScreen.clear')}
                   </Text>
-                </Pressable>
-                <Pressable
-                  className={`h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
+                </RipplePressable>
+                <RipplePressable
+                  rippleColor="rgba(255, 255, 255, 0.3)"
+                  className={`h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px] overflow-hidden ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
                   onPress={handleTranslateText}
                 >
                   <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
                     {t('TranslationsScreen.translate')}
                   </Text>
-                </Pressable>
+                </RipplePressable>
               </View>
             </View>
           </View>
 
           <View className="pb-[40px] items-center h-[60px]">
-            <Pressable
-              className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full ${isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
+            <RipplePressable
+              rippleColor="rgba(255, 255, 255, 0.3)"
+              className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full overflow-hidden ${isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
               onPress={handleStopListening}
             >
               <View className="w-[21px] h-[21px] bg-text-onPrimary rounded-sm" />
-            </Pressable>
+            </RipplePressable>
           </View>
         </View>
       </GradientLayout>

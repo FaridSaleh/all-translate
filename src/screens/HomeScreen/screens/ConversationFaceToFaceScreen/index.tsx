@@ -1,11 +1,12 @@
 import { useState } from 'react'
-import { Pressable, View } from 'react-native'
+import { View } from 'react-native'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import { LanguageType } from '../../type'
 import SourceLanguage from '../ConversationScreen/components/SourceLanguage'
 import TargetLanguage from '../ConversationScreen/components/TargetLanguage'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { MicrophoneIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import GradientLayout from '@/screens/HomeScreen/components/GradientLayout'
 
@@ -69,19 +70,21 @@ const ConversationFaceToFaceScreen = () => {
           </View>
 
           <View className="pb-[40px] items-center h-[60px] my-[16px]">
-            <Pressable
-              className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full ${!isRecording ? 'opacity-100' : 'opacity-0'}`}
+            <RipplePressable
+              rippleColor="rgba(255, 255, 255, 0.3)"
+              className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full overflow-hidden ${!isRecording ? 'opacity-100' : 'opacity-0'}`}
               onPress={handleStartListening}
             >
               <MicrophoneIcon width={32} height={32} color="#FFFFFF" />
-            </Pressable>
+            </RipplePressable>
 
-            <Pressable
-              className={`relative top-[-55px] w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full ${isRecording ? 'opacity-100' : 'opacity-0'}`}
+            <RipplePressable
+              rippleColor="rgba(255, 255, 255, 0.3)"
+              className={`relative top-[-55px] w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full overflow-hidden ${isRecording ? 'opacity-100' : 'opacity-0'}`}
               onPress={handleStopListening}
             >
               <View className="w-[21px] h-[21px] bg-text-onPrimary rounded-sm" />
-            </Pressable>
+            </RipplePressable>
           </View>
 
           <View className="w-full bg-bg-card rounded-2xl p-4">

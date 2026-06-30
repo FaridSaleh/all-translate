@@ -1,7 +1,8 @@
 import { useState } from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import { CheckIcon, FaceToFaceIcon, SideBySideIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 import { useAppNavigation } from '@/screens/helper'
 
 const ConversationView = () => {
@@ -11,16 +12,16 @@ const ConversationView = () => {
 
   return (
     <View className="relative">
-      <Pressable onPress={() => setIsOpen(prev => !prev)}>
+      <RipplePressable onPress={() => setIsOpen(prev => !prev)}>
         <Text className="text-primary-main text-[14px] font-semibold">
           {t('ConversationScreen.view.title')}
         </Text>
-      </Pressable>
+      </RipplePressable>
 
       {isOpen && (
         <View className="absolute top-8 left-0 w-[221px] bg-bg-card rounded-[16px] shadow-md z-10 p-[16px]">
           <View>
-            <Pressable
+            <RipplePressable
               className="flex-row items-center justify-between"
               onPress={() => setIsOpen(false)}
             >
@@ -35,11 +36,11 @@ const ConversationView = () => {
               <View className="flex-1 items-center justify-center">
                 <SideBySideIcon width={23} height={13} />
               </View>
-            </Pressable>
+            </RipplePressable>
 
             <View className="h-[1px] bg-bg-buttonDisabled my-[9px]" />
 
-            <Pressable
+            <RipplePressable
               className="flex-row items-center justify-between"
               onPress={() => {
                 setIsOpen(false)
@@ -57,7 +58,7 @@ const ConversationView = () => {
               <View className="flex-1 items-center justify-center">
                 <FaceToFaceIcon width={14} height={23} />
               </View>
-            </Pressable>
+            </RipplePressable>
           </View>
         </View>
       )}

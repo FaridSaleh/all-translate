@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { Pressable, View } from 'react-native'
+import { View } from 'react-native'
 import TextToSpeechBottomSheet from '../TextToSpeechBottomSheet'
 import TextToSpeechProps from './type'
 import { useTextToSpeechRequest } from '@/apis/translate/textToSpeech'
 import { InfoIcon, SpeakerIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 import useTextToSpeech from '@/hooks/useTextToSpeech'
 import useConfigurationStore from '@/store/configuration'
 
@@ -68,9 +69,10 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
   return (
     <>
       <View className="flex-row items-center">
-        <Pressable
+        <RipplePressable
+          borderless
           className={`${show ? 'opacity-100' : 'opacity-0 w-0'}`}
-          disabled={!show}
+          // disabled={!show}
           onPress={handleSpeakTargetText}
         >
           <SpeakerIcon
@@ -78,14 +80,15 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
             height={20}
             color={!isTextToSpeechAvailable ? '#9CA3AF' : type === 'source' ? '#000000' : '#1E40AF'}
           />
-        </Pressable>
+        </RipplePressable>
 
-        <Pressable
+        <RipplePressable
+          borderless
           className={`${!isTextToSpeechAvailable && show ? 'opacity-100' : 'opacity-0 w-0'}`}
           onPress={() => setIsVoiceUnavailableOpen(true)}
         >
           <InfoIcon width={23} height={23} color="#9CA3AF" />
-        </Pressable>
+        </RipplePressable>
       </View>
 
       <TextToSpeechBottomSheet

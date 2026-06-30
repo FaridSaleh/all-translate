@@ -1,7 +1,8 @@
-import { Pressable, View } from 'react-native'
+import { View } from 'react-native'
 import TextToSpeechProps from './type'
 import { useTextToSpeechRequest } from '@/apis/translate/textToSpeech'
 import { SpeakerIcon } from '@/assets'
+import { RipplePressable } from '@/components'
 import useTextToSpeech from '@/hooks/useTextToSpeech'
 
 const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechProps) => {
@@ -36,13 +37,14 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
 
   return (
     <View className="flex-row items-center">
-      <Pressable
+      <RipplePressable
+        borderless
         className={`${show ? 'opacity-100' : 'opacity-0 w-0'}`}
         disabled={!show}
         onPress={handleSpeakTargetText}
       >
         <SpeakerIcon width={20} height={20} color={type === 'source' ? '#000000' : '#1E40AF'} />
-      </Pressable>
+      </RipplePressable>
     </View>
   )
 }

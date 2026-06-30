@@ -1,7 +1,7 @@
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import OptionalUpdateModalProps from './type'
 import { RetryErrorIcon } from '@/assets'
-import { Modal } from '@/components'
+import { Modal, RipplePressable } from '@/components'
 import useConfigurationStore from '@/store/configuration'
 
 const OptionalUpdateModal = ({
@@ -20,7 +20,7 @@ const OptionalUpdateModal = ({
         <Text className="text-[14px] font-normal text-text-primary text-center mb-10">
           {configuration?.optionalUpdateDescription}
         </Text>
-        <Pressable
+        <RipplePressable
           className="w-full h-12 justify-center bg-primary-light rounded-xl px-4 py-2 mb-4"
           onPress={() => {
             setIsOptionalUpdateOpen(false)
@@ -29,8 +29,8 @@ const OptionalUpdateModal = ({
           <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
             {configuration?.optionalPositiveTitle}
           </Text>
-        </Pressable>
-        <Pressable
+        </RipplePressable>
+        <RipplePressable
           className="w-full h-12 justify-center border border-primary-light rounded-xl px-4 py-2"
           onPress={() => {
             setIsOptionalUpdateOpen(false)
@@ -39,7 +39,7 @@ const OptionalUpdateModal = ({
           <Text className="text-[16px] font-semibold text-bg-buttonPrimary text-center">
             {configuration?.optionalNegativeTitle}
           </Text>
-        </Pressable>
+        </RipplePressable>
       </View>
     </Modal>
   )

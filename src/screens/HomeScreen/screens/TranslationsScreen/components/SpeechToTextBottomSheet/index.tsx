@@ -1,8 +1,8 @@
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { Trans, useTranslation } from 'react-i18next'
 import SpeechToTextBottomSheetProps from './type'
 import { ArrowRightIcon, LockIcon } from '@/assets'
-import { BottomSheet } from '@/components'
+import { BottomSheet, RipplePressable } from '@/components'
 
 const SpeechToTextBottomSheet = ({ open, setOpen, languageName }: SpeechToTextBottomSheetProps) => {
   const { t } = useTranslation()
@@ -33,7 +33,7 @@ const SpeechToTextBottomSheet = ({ open, setOpen, languageName }: SpeechToTextBo
             />
           </Text>
         </View>
-        <Pressable
+        <RipplePressable
           className="w-full h-[56px] flex-row items-center justify-center gap-[6px] bg-primary-light rounded-xl px-[16px] py-[8px]"
           onPress={() => {
             setOpen(false)
@@ -43,8 +43,8 @@ const SpeechToTextBottomSheet = ({ open, setOpen, languageName }: SpeechToTextBo
             3-day trial, then $4.99/week
           </Text>
           <ArrowRightIcon width={14.5} height={12} color="#FFFFFF" />
-        </Pressable>
-        <Pressable
+        </RipplePressable>
+        <RipplePressable
           className="w-full h-[56px] justify-center border border-primary-light rounded-xl px-[16px] py-[8px]"
           onPress={() => {
             setOpen(false)
@@ -53,7 +53,7 @@ const SpeechToTextBottomSheet = ({ open, setOpen, languageName }: SpeechToTextBo
           <Text className="text-[16px] font-semibold text-bg-buttonPrimary text-center">
             {t('Common.cancel')}
           </Text>
-        </Pressable>
+        </RipplePressable>
       </View>
     </BottomSheet>
   )

@@ -1,8 +1,8 @@
 import React from 'react'
-import { Pressable, Text, View } from 'react-native'
+import { Text, View } from 'react-native'
 import { ForceUpdateModalProps } from './type'
 import { RetryErrorIcon } from '@/assets'
-import { Modal } from '@/components'
+import { Modal, RipplePressable } from '@/components'
 import { useAppNavigation } from '@/screens/helper'
 import useConfigurationStore from '@/store/configuration'
 
@@ -21,7 +21,7 @@ const ForceUpdateModal = ({ isForceUpdateOpen, setIsForceUpdateOpen }: ForceUpda
         <Text className="text-[14px] font-normal text-text-primary text-center mb-10">
           {configuration?.forceUpdateDescription}
         </Text>
-        <Pressable
+        <RipplePressable
           className="w-full h-12 justify-center bg-primary-light rounded-xl px-4 py-2"
           onPress={() => {
             setIsForceUpdateOpen(false)
@@ -32,7 +32,7 @@ const ForceUpdateModal = ({ isForceUpdateOpen, setIsForceUpdateOpen }: ForceUpda
           <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
             {configuration?.forcePositiveTitle}
           </Text>
-        </Pressable>
+        </RipplePressable>
       </View>
     </Modal>
   )
