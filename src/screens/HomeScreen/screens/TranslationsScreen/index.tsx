@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { InteractionManager, Text, View } from 'react-native'
+import { InteractionManager, Keyboard, Platform, ScrollView, Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
@@ -9,11 +9,13 @@ import SourceLanguage from './components/SourceLanguage'
 import TargetLanguage from './components/TargetLanguage'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { useTextToTextRequest } from '@/apis/translate/textToText'
-import { SwapIcon } from '@/assets'
+import { KeyboardDismissIcon, SwapIcon } from '@/assets'
 import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useSpeechToText from '@/hooks/useSpeechToText'
 import useConfigurationStore from '@/store/configuration'
+
+const scrollContentStyle = { flexGrow: 1 }
 
 const TranslationsScreen = () => {
   const { t } = useTranslation()
@@ -48,6 +50,25 @@ const TranslationsScreen = () => {
 
   const isCurrentlyListening = isListening || isRecording
   const [isSwapping, setIsSwapping] = useState(false)
+  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+
+  useEffect(() => {
+    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
+      setIsKeyboardVisible(true)
+    })
+    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
+      setIsKeyboardVisible(false)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
+
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss()
+  }
 
   const handleTranslateText = async () => {
     translateText(
@@ -138,7 +159,13 @@ const TranslationsScreen = () => {
     <>
       <GradientLayout>
         <View className="flex-1 p-6">
-          <View className="flex-1">
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={scrollContentStyle}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+          >
             <View className="bg-bg-card rounded-2xl p-4">
               <SourceLanguage
                 language={sourceLanguage}
@@ -198,7 +225,20 @@ const TranslationsScreen = () => {
                 </RipplePressable>
               </View>
             </View>
-          </View>
+
+            <View
+              className="mt-4 ml-4"
+              pointerEvents={isKeyboardVisible ? 'auto' : 'none'}
+            >
+              <RipplePressable
+                borderless
+                className={`w-[36px] h-[36px] bg-bg-base rounded-full items-center justify-center overflow-hidden ${isKeyboardVisible ? 'opacity-100' : 'opacity-0'}`}
+                onPress={handleDismissKeyboard}
+              >
+                <KeyboardDismissIcon width={28} height={20} color="#1D4ED8" />
+              </RipplePressable>
+            </View>
+          </ScrollView>
 
           <View className="pb-[40px] items-center h-[60px]">
             <RipplePressable
