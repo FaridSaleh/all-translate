@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { View } from 'react-native'
+import { Keyboard, Platform, ScrollView, View } from 'react-native'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import { LanguageType } from '../../type'
@@ -7,10 +7,12 @@ import ConversationBottomSheet from './components/ConversationBottomSheet'
 import SourceLanguage from './components/SourceLanguage'
 import TargetLanguage from './components/TargetLanguage'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
-import { MicrophoneIcon } from '@/assets'
+import { MicrophoneIcon, KeyboardDismissIcon } from '@/assets'
 import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useConfigurationStore from '@/store/configuration'
+
+const scrollContentStyle = { flexGrow: 1 }
 
 const ConversationScreen = () => {
   const [isConversationModalOpen, setIsConversationModalOpen] = useState(false)
@@ -27,6 +29,40 @@ const ConversationScreen = () => {
   const { isRecording, startRecording, stopRecording } = useAudioRecorder()
 
   const { mutate: transcriptSpeech } = useSpeechToTextRequest()
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
+
+  useEffect(() => {
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+
+    const showSubscription = Keyboard.addListener(showEvent, event => {
+      setKeyboardHeight(event.endCoordinates.height)
+    })
+    const hideSubscription = Keyboard.addListener(hideEvent, () => {
+      setKeyboardHeight(0)
+    })
+
+    return () => {
+      showSubscription.remove()
+      hideSubscription.remove()
+    }
+  }, [])
+
+  const micButtonContainerStyle = {
+    paddingBottom: keyboardHeight > 0 ? 16 : 40,
+    marginBottom: keyboardHeight,
+  }
+
+  const scrollContentContainerStyle = [
+    scrollContentStyle,
+    keyboardHeight > 0 ? { paddingBottom: 16 } : null,
+  ]
+
+  const isKeyboardVisible = keyboardHeight > 0
+
+  const handleDismissKeyboard = () => {
+    Keyboard.dismiss()
+  }
 
   useEffect(() => {
     if (!hasPremiumFeature) {
@@ -73,7 +109,13 @@ const ConversationScreen = () => {
     <>
       <GradientLayout>
         <View className="flex-1 p-6">
-          <View className="flex-1">
+          <ScrollView
+            className="flex-1"
+            contentContainerStyle={scrollContentContainerStyle}
+            keyboardShouldPersistTaps="handled"
+            showsVerticalScrollIndicator={false}
+            automaticallyAdjustKeyboardInsets={Platform.OS === 'ios'}
+          >
             <View className="bg-bg-card rounded-2xl p-4">
               <SourceLanguage
                 language={sourceLanguage}
@@ -95,9 +137,19 @@ const ConversationScreen = () => {
                 isListening={isRecording}
               />
             </View>
-          </View>
 
-          <View className="pb-[40px] items-center h-[60px]">
+            <View className="mt-4 ml-4" pointerEvents={isKeyboardVisible ? 'auto' : 'none'}>
+              <RipplePressable
+                borderless
+                className={`w-[36px] h-[36px] bg-bg-base rounded-full items-center justify-center overflow-hidden ${isKeyboardVisible ? 'opacity-100' : 'opacity-0'}`}
+                onPress={handleDismissKeyboard}
+              >
+                <KeyboardDismissIcon width={28} height={20} color="#1D4ED8" />
+              </RipplePressable>
+            </View>
+          </ScrollView>
+
+          <View className="items-center h-[60px]" style={micButtonContainerStyle}>
             <RipplePressable
               rippleColor="rgba(255, 255, 255, 0.3)"
               className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full overflow-hidden ${!isRecording ? 'opacity-100' : 'opacity-0'}`}

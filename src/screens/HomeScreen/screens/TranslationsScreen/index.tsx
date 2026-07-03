@@ -50,14 +50,22 @@ const TranslationsScreen = () => {
 
   const isCurrentlyListening = isListening || isRecording
   const [isSwapping, setIsSwapping] = useState(false)
-  const [isKeyboardVisible, setIsKeyboardVisible] = useState(false)
+  const [keyboardHeight, setKeyboardHeight] = useState(0)
+  const isDetectLanguageSelected = sourceLanguage.id === 'detect'
+  const isSwapDisabled = isDetectLanguageSelected || isSwapping
+  const isKeyboardVisible = keyboardHeight > 0
+  const showActionButtons = sourceText.length > 0 && !isCurrentlyListening
+  const pinActionButtonsAboveKeyboard = showActionButtons && isKeyboardVisible
 
   useEffect(() => {
-    const showSubscription = Keyboard.addListener('keyboardDidShow', () => {
-      setIsKeyboardVisible(true)
+    const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
+    const hideEvent = Platform.OS === 'ios' ? 'keyboardWillHide' : 'keyboardDidHide'
+
+    const showSubscription = Keyboard.addListener(showEvent, event => {
+      setKeyboardHeight(event.endCoordinates.height)
     })
-    const hideSubscription = Keyboard.addListener('keyboardDidHide', () => {
-      setIsKeyboardVisible(false)
+    const hideSubscription = Keyboard.addListener(hideEvent, () => {
+      setKeyboardHeight(0)
     })
 
     return () => {
@@ -136,7 +144,7 @@ const TranslationsScreen = () => {
   }
 
   const handleSwapLanguages = () => {
-    if (isSwapping) return
+    if (isSwapDisabled) return
     setIsSwapping(true)
 
     const temp = sourceLanguage
@@ -154,6 +162,28 @@ const TranslationsScreen = () => {
       resetAudioRecorder()
     }
   }
+
+  const renderActionButtons = () => (
+    <View className="flex-row items-center justify-between">
+      <RipplePressable
+        className="justify-center rounded-[6px] p-[6px] overflow-hidden"
+        onPress={clearTexts}
+      >
+        <Text className="text-[16px] font-regular text-primary-main text-center">
+          {t('TranslationsScreen.clear')}
+        </Text>
+      </RipplePressable>
+      <RipplePressable
+        rippleColor="rgba(255, 255, 255, 0.3)"
+        className="justify-center bg-primary-main rounded-[6px] p-[6px] overflow-hidden"
+        onPress={handleTranslateText}
+      >
+        <Text className="text-[16px] font-semibold text-text-onPrimary text-center py-[4px] px-[12px]">
+          {t('TranslationsScreen.translate')}
+        </Text>
+      </RipplePressable>
+    </View>
+  )
 
   return (
     <>
@@ -183,11 +213,15 @@ const TranslationsScreen = () => {
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
                 <RipplePressable
                   borderless
-                  className="w-[30px] h-[30px] bg-bg-base rounded-full items-center justify-center overflow-hidden"
-                  onPress={isSwapping ? undefined : handleSwapLanguages}
-                  disabled={isSwapping}
+                  className={`w-[44px] h-[44px] bg-bg-base rounded-full items-center justify-center overflow-hidden ${isDetectLanguageSelected ? 'opacity-50' : ''}`}
+                  onPress={isSwapDisabled ? undefined : handleSwapLanguages}
+                  disabled={isSwapDisabled}
                 >
-                  <SwapIcon width={15} height={12} color="#1D4ED8" />
+                  <SwapIcon
+                    width={15}
+                    height={12}
+                    color={isDetectLanguageSelected ? '#9CA3AF' : '#1D4ED8'}
+                  />
                 </RipplePressable>
                 <View className="flex-1 border-t border-bg-buttonDisabled" />
               </View>
@@ -202,34 +236,19 @@ const TranslationsScreen = () => {
                 showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
               />
 
-              <View
-                className={`flex-1 border-t border-bg-buttonDisabled mb-[18px] ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
-              />
-              <View className="flex-row items-center justify-between">
-                <RipplePressable
-                  className={`h-[31px] justify-center rounded-[6px] p-[6px] overflow-hidden ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
-                  onPress={clearTexts}
-                >
-                  <Text className="text-[16px] font-regular text-primary-main text-center">
-                    {t('TranslationsScreen.clear')}
-                  </Text>
-                </RipplePressable>
-                <RipplePressable
-                  rippleColor="rgba(255, 255, 255, 0.3)"
-                  className={`h-[31px] justify-center bg-primary-main rounded-[6px] p-[6px] overflow-hidden ${sourceText.length > 0 && !isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}
-                  onPress={handleTranslateText}
-                >
-                  <Text className="text-[16px] font-semibold text-text-onPrimary text-center">
-                    {t('TranslationsScreen.translate')}
-                  </Text>
-                </RipplePressable>
-              </View>
+              {!pinActionButtonsAboveKeyboard && (
+                <>
+                  <View
+                    className={`flex-1 border-t border-bg-buttonDisabled mb-[18px] ${showActionButtons ? 'opacity-100' : 'opacity-0'}`}
+                  />
+                  <View className={showActionButtons ? 'opacity-100' : 'opacity-0'}>
+                    {renderActionButtons()}
+                  </View>
+                </>
+              )}
             </View>
 
-            <View
-              className="mt-4 ml-4"
-              pointerEvents={isKeyboardVisible ? 'auto' : 'none'}
-            >
+            <View className="mt-4 ml-4" pointerEvents={isKeyboardVisible ? 'auto' : 'none'}>
               <RipplePressable
                 borderless
                 className={`w-[36px] h-[36px] bg-bg-base rounded-full items-center justify-center overflow-hidden ${isKeyboardVisible ? 'opacity-100' : 'opacity-0'}`}
@@ -239,6 +258,15 @@ const TranslationsScreen = () => {
               </RipplePressable>
             </View>
           </ScrollView>
+
+          {pinActionButtonsAboveKeyboard && (
+            <View
+              className="px-4 pt-3 pb-3 bg-bg-card rounded-2xl border-t border-bg-buttonDisabled"
+              style={{ marginBottom: keyboardHeight }}
+            >
+              {renderActionButtons()}
+            </View>
+          )}
 
           <View className="pb-[40px] items-center h-[60px]">
             <RipplePressable

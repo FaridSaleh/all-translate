@@ -1,8 +1,14 @@
-import React from 'react'
-import { Modal as RNModal, View } from 'react-native'
+import React, { useEffect } from 'react'
+import { Keyboard, Modal as RNModal, View } from 'react-native'
 import ModalProps from './type'
 
 const Modal = ({ children, isOpen, setIsOpen }: ModalProps) => {
+  useEffect(() => {
+    if (isOpen) {
+      Keyboard.dismiss()
+    }
+  }, [isOpen])
+
   return (
     <RNModal
       animationType="fade"

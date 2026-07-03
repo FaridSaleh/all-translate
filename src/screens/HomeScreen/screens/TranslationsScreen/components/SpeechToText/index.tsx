@@ -25,7 +25,7 @@ const SpeechToText = ({
       <View className="flex-row items-center">
         <RipplePressable
           borderless
-          className={`${show ? 'opacity-100' : 'opacity-0'}`}
+          className={`h-[44px] items-center justify-center ${show ? 'opacity-100 w-[44px]' : 'opacity-0 w-0'}`}
           disabled={!show}
           onPress={onPress}
         >
@@ -38,7 +38,7 @@ const SpeechToText = ({
         </RipplePressable>
         <RipplePressable
           borderless
-          className={`${!isSpeechToTextAvailable && show ? 'opacity-100' : 'opacity-0 w-0'}`}
+          className={`h-[44px] items-center justify-center ${!isSpeechToTextAvailable && show ? 'opacity-100 w-[44px]' : 'opacity-0 w-0'}`}
           onPress={() => setIsVoiceUnavailableOpen(true)}
         >
           <InfoIcon width={23} height={23} color="#9CA3AF" />

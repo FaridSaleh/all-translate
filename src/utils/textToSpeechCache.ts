@@ -9,7 +9,7 @@ type CacheEntry = TextToSpeechCacheKey & {
 
 const normalizeText = (text: string) => text.trim()
 
-class TextToSpeechCache {
+export class TextToSpeechCache {
   private latest: CacheEntry | null = null
 
   get({ translatedText, targetLang }: TextToSpeechCacheKey): ArrayBuffer | null {
@@ -38,3 +38,4 @@ class TextToSpeechCache {
 }
 
 export const textToSpeechCache = new TextToSpeechCache()
+export const conversationTextToSpeechCache = new TextToSpeechCache()

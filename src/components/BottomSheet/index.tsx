@@ -1,4 +1,5 @@
 import { useCallback, useRef, useEffect, useMemo } from 'react'
+import { Keyboard } from 'react-native'
 import { BottomSheetModal, BottomSheetView, BottomSheetBackdrop } from '@gorhom/bottom-sheet'
 import BottomSheetProps from './type'
 
@@ -39,6 +40,7 @@ const BottomSheet = ({ children, isOpen, setIsOpen, height }: BottomSheetProps) 
 
   useEffect(() => {
     if (isOpen) {
+      Keyboard.dismiss()
       bottomSheetRef.current?.present()
     } else {
       bottomSheetRef.current?.dismiss()

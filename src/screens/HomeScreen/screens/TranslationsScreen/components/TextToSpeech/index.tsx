@@ -71,7 +71,7 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
       <View className="flex-row items-center">
         <RipplePressable
           borderless
-          className={`${show ? 'opacity-100' : 'opacity-0 w-0'}`}
+          className={`h-[44px] items-center justify-center ${show ? 'opacity-100 w-[44px]' : 'opacity-0 w-0'}`}
           // disabled={!show}
           onPress={handleSpeakTargetText}
         >
@@ -84,7 +84,7 @@ const TextToSpeech = ({ type, show, textValue, targetLanguage }: TextToSpeechPro
 
         <RipplePressable
           borderless
-          className={`${!isTextToSpeechAvailable && show ? 'opacity-100' : 'opacity-0 w-0'}`}
+          className={`h-[44px] items-center justify-center ${!isTextToSpeechAvailable && show ? 'opacity-100 w-[44px]' : 'opacity-0 w-0'}`}
           onPress={() => setIsVoiceUnavailableOpen(true)}
         >
           <InfoIcon width={23} height={23} color="#9CA3AF" />
