@@ -22,6 +22,21 @@
     "conversation": "Conversation",
     "camera": "Camera"
   },
+  "SettingsBottomSheet": {
+    "title": "Setting",
+    "account": "Account",
+    "all_translate_pro": "All Translate Pro",
+    "support": "Support",
+    "contact_us": "Contact Us",
+    "whats_new": "What's New?",
+    "legal": "Legal",
+    "privacy_policy": "Privacy Policy",
+    "terms_of_services": "Term's of Services",
+    "our_apps": "Our Apps",
+    "share_all_translate": "Share All Translate",
+    "our_website": "Our Website",
+    "our_apps_menu": "Our Apps"
+  },
   "TranslationsScreen": {
     "paste": "Paste",
     "translate": "Translate",

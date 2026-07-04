@@ -11,4 +11,5 @@ export interface HeaderLeftProps {
 
 export interface HeaderRightProps {
   headerRight: HeaderProps['headerRight']
+  onOpenSettings?: () => void
 }
