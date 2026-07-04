@@ -8,4 +8,5 @@ export default interface TargetLanguageProps {
   isTranscriptAvailable: boolean
   handleSwapLanguages: () => void
   showTextToSpeechIcon: boolean
+  isTranslating?: boolean
 }

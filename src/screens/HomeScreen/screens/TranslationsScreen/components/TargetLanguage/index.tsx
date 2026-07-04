@@ -14,6 +14,7 @@ const TargetLanguage = ({
   isTranscriptAvailable,
   handleSwapLanguages,
   showTextToSpeechIcon,
+  isTranslating = false,
 }: TargetLanguageProps) => {
   const { t, i18n } = useTranslation()
 
@@ -59,7 +60,12 @@ const TargetLanguage = ({
 
       <View className="flex-row items-start justify-between gap-2">
         <View className="flex-1">
-          {textValue.length > 0 ? (
+          {isTranslating ? (
+            <View className="gap-[10px]">
+              <View className="h-[17px] rounded-[6px] bg-[#C2D4FA] w-[90%]" />
+              <View className="h-[17px] rounded-[6px] bg-[#C2D4FA] w-[65%]" />
+            </View>
+          ) : textValue.length > 0 ? (
             <Text className="text-[17px] font-bold text-primary-main">{textValue}</Text>
           ) : (
             <Text className="text-[17px] font-bold text-[#C2D4FA]">

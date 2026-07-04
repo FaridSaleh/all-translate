@@ -1,11 +1,11 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { InteractionManager, Keyboard, Platform, ScrollView, Text, View } from 'react-native'
 import { useTranslation } from 'react-i18next'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import OptionalUpdateModal from '../../components/OptionalUpdateModal'
 import { LanguageType } from '../../type'
-import SourceLanguage from './components/SourceLanguage'
+import SourceLanguage, { SourceLanguageRef } from './components/SourceLanguage'
 import TargetLanguage from './components/TargetLanguage'
 import { useSpeechToTextRequest } from '@/apis/translate/speechToText'
 import { useTextToTextRequest } from '@/apis/translate/textToText'
@@ -19,6 +19,7 @@ const scrollContentStyle = { flexGrow: 1 }
 
 const TranslationsScreen = () => {
   const { t } = useTranslation()
+  const sourceLanguageInputRef = useRef<SourceLanguageRef>(null)
   const [isOptionalUpdateOpen, setIsOptionalUpdateOpen] = useState(false)
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
   const [sourceLanguage, setSourceLanguage] = useState<LanguageType>({
@@ -45,7 +46,7 @@ const TranslationsScreen = () => {
     reset: resetAudioRecorder,
   } = useAudioRecorder()
 
-  const { mutate: translateText } = useTextToTextRequest()
+  const { mutate: translateText, isPending: isTranslating } = useTextToTextRequest()
   const { mutate: transcriptSpeech } = useSpeechToTextRequest()
 
   const isCurrentlyListening = isListening || isRecording
@@ -78,7 +79,7 @@ const TranslationsScreen = () => {
     Keyboard.dismiss()
   }
 
-  const handleTranslateText = async () => {
+  const handleTranslateText = () => {
     translateText(
       {
         transcribedText: sourceText,
@@ -88,6 +89,9 @@ const TranslationsScreen = () => {
       {
         onSuccess(data) {
           setTargetText(data.translatedText)
+        },
+        onSettled: () => {
+          Keyboard.dismiss()
         },
       },
     )
@@ -175,8 +179,9 @@ const TranslationsScreen = () => {
       </RipplePressable>
       <RipplePressable
         rippleColor="rgba(255, 255, 255, 0.3)"
-        className="justify-center bg-primary-main rounded-[6px] p-[6px] overflow-hidden"
+        className={`justify-center bg-primary-main rounded-[6px] p-[6px] overflow-hidden ${isTranslating ? 'opacity-50' : ''}`}
         onPress={handleTranslateText}
+        disabled={isTranslating}
       >
         <Text className="text-[16px] font-semibold text-text-onPrimary text-center py-[4px] px-[12px]">
           {t('TranslationsScreen.translate')}
@@ -198,6 +203,7 @@ const TranslationsScreen = () => {
           >
             <View className="bg-bg-card rounded-2xl p-4">
               <SourceLanguage
+                ref={sourceLanguageInputRef}
                 language={sourceLanguage}
                 setOpenLanguageModal={setOpenLanguageModal}
                 handleStartListening={handleStartListening}
@@ -234,6 +240,7 @@ const TranslationsScreen = () => {
                 isTranscriptAvailable={transcriptAvailabilityCheck(targetLanguage.id)}
                 handleSwapLanguages={handleSwapLanguages}
                 showTextToSpeechIcon={sourceText.length > 0 && targetText.length > 0}
+                isTranslating={isTranslating}
               />
 
               {!pinActionButtonsAboveKeyboard && (
