@@ -9,6 +9,7 @@ import { MicrophoneIcon } from '@/assets'
 import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import GradientLayout from '@/screens/HomeScreen/components/GradientLayout'
+import { mapSpeechToTextResult } from '@/utils/mapSpeechToTextResult'
 
 const ConversationFaceToFaceScreen = () => {
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
@@ -46,8 +47,9 @@ const ConversationFaceToFaceScreen = () => {
         },
         {
           onSuccess(data) {
-            setSourceText(data.transcribedText)
-            setTargetText(data.translatedText)
+            const mapped = mapSpeechToTextResult(data, sourceLanguage.id)
+            setSourceText(mapped.sourceText)
+            setTargetText(mapped.targetText)
           },
         },
       )

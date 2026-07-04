@@ -14,6 +14,7 @@ import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useSpeechToText from '@/hooks/useSpeechToText'
 import useConfigurationStore from '@/store/configuration'
+import { mapSpeechToTextResult } from '@/utils/mapSpeechToTextResult'
 
 const scrollContentStyle = { flexGrow: 1 }
 
@@ -136,8 +137,9 @@ const TranslationsScreen = () => {
           },
           {
             onSuccess(data) {
-              setSourceText(data.transcribedText)
-              setTargetText(data.translatedText)
+              const mapped = mapSpeechToTextResult(data, sourceLanguage.id)
+              setSourceText(mapped.sourceText)
+              setTargetText(mapped.targetText)
             },
           },
         )

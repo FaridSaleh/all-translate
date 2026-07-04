@@ -1,4 +1,6 @@
 /* eslint-disable react/no-unstable-nested-components */
+import { Platform } from 'react-native'
+import { useSafeAreaInsets } from 'react-native-safe-area-context'
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs'
 import { createNativeStackNavigator } from '@react-navigation/native-stack'
 import { useTranslation } from 'react-i18next'
@@ -21,6 +23,8 @@ const HomeStack = createNativeStackNavigator()
 
 const HomeTabs = () => {
   const { t } = useTranslation()
+  const insets = useSafeAreaInsets()
+  const androidTabBarBottomInset = Math.max(insets.bottom, 16)
 
   return (
     <Tab.Navigator
@@ -35,6 +39,10 @@ const HomeTabs = () => {
           borderTopWidth: 1,
           borderTopColor: '#4B5563',
           shadowColor: 'transparent',
+          ...(Platform.OS === 'android' && {
+            paddingBottom: androidTabBarBottomInset,
+            height: 56 + androidTabBarBottomInset,
+          }),
         },
       }}
     >

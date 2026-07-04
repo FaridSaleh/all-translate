@@ -38,7 +38,11 @@ const HeaderRight = ({ headerRight }: HeaderRightProps) => {
 
     case 'close':
       return (
-        <RipplePressable borderless onPress={() => navigation.goBack()}>
+        <RipplePressable
+          borderless
+          className="w-[44px] h-[44px] items-center justify-center overflow-hidden"
+          onPress={() => navigation.goBack()}
+        >
           <CloseIcon width={15} height={15} color="#000" />
         </RipplePressable>
       )

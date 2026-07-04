@@ -11,6 +11,7 @@ import { MicrophoneIcon, KeyboardDismissIcon } from '@/assets'
 import { RipplePressable } from '@/components'
 import useAudioRecorder from '@/hooks/useAudioRecorder'
 import useConfigurationStore from '@/store/configuration'
+import { mapSpeechToTextResult } from '@/utils/mapSpeechToTextResult'
 
 const scrollContentStyle = { flexGrow: 1 }
 
@@ -92,13 +93,9 @@ const ConversationScreen = () => {
         },
         {
           onSuccess(data) {
-            if (data.sourceLang === sourceLanguage.id) {
-              setSourceText(data.transcribedText)
-              setTargetText(data.translatedText)
-            } else {
-              setTargetText(data.transcribedText)
-              setSourceText(data.translatedText)
-            }
+            const mapped = mapSpeechToTextResult(data, sourceLanguage.id)
+            setSourceText(mapped.sourceText)
+            setTargetText(mapped.targetText)
           },
         },
       )
