@@ -144,10 +144,10 @@ const LanguageBottomSheet = ({
                 {popularLanguages.map((item, index) => (
                   <View key={item.id}>
                     <RipplePressable
-                      className="flex-row items-center py-3 gap-2"
+                      className="h-[48px] flex-row items-center py-4 gap-2"
                       onPress={() => handleLanguageSelect(item)}
                     >
-                      <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
+                      <Text className="text-[14px] font-semibold">{item.name}</Text>
                       {((selectedType === 'source' && item.id === sourceLanguage.id) ||
                         (selectedType === 'target' && item.id === targetLanguage.id)) && (
                         <CheckIcon width={24} height={24} color="#2563EB" />
@@ -171,10 +171,10 @@ const LanguageBottomSheet = ({
             ItemSeparatorComponent={ItemSeparatorComponent}
             renderItem={({ item }) => (
               <RipplePressable
-                className="flex-row items-center py-3 gap-2"
+                className="h-[48px] flex-row items-center py-4 gap-2"
                 onPress={() => handleLanguageSelect(item)}
               >
-                <Text className="h-[24px] text-[14px] font-semibold">{item.name}</Text>
+                <Text className="text-[14px] font-semibold">{item.name}</Text>
                 {((selectedType === 'source' && item.id === sourceLanguage.id) ||
                   (selectedType === 'target' && item.id === targetLanguage.id)) && (
                   <CheckIcon width={24} height={24} color="#2563EB" />
