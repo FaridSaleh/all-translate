@@ -10,7 +10,7 @@ const ImageScreenHeader = ({ title, onClose }: ImageScreenHeaderProps) => {
   return (
     <View
       style={{ paddingTop: insets.top }}
-      className="absolute top-0 left-0 right-0 z-10 flex-row items-center justify-between px-4 pb-3 bg-transparent"
+      className="flex-row items-center justify-between px-4 pb-3 bg-bg-card"
     >
       <View className="w-[44px]" />
 

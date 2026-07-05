@@ -13,13 +13,15 @@ const CameraPreview = ({ isFlashlightOn, isActive }: CameraPreviewProps) => {
   }
 
   return (
-    <Camera
-      style={StyleSheet.absoluteFill}
-      device={device}
-      isActive={isActive}
-      torchMode={isFlashlightOn ? 'on' : 'off'}
-      resizeMode="cover"
-    />
+    <View className="flex-1">
+      <Camera
+        style={StyleSheet.absoluteFill}
+        device={device}
+        isActive={isActive}
+        torchMode={isFlashlightOn ? 'on' : 'off'}
+        resizeMode="cover"
+      />
+    </View>
   )
 }
 

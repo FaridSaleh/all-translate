@@ -83,38 +83,40 @@ const ImageScreen = () => {
 
   return (
     <>
-      <View className="flex-1 bg-black">
-        {selectedImageUri ? (
-          <Image
-            source={{ uri: selectedImageUri }}
-            style={StyleSheet.absoluteFill}
-            resizeMode="cover"
-          />
-        ) : (
-          hasPermission && (
-            <CameraPreview isFlashlightOn={isFlashlightOn} isActive={isCameraActive} />
-          )
-        )}
-
+      <View className="flex-1 bg-bg-card">
         <ImageScreenHeader title={t('ImageScreen.title')} onClose={handleClose} />
 
-        <View pointerEvents="box-none" style={StyleSheet.absoluteFill} className="justify-between">
-          <View className="pt-[108px] items-center px-5">
-            <LanguageSelector
-              sourceLanguage={sourceLanguage}
-              targetLanguage={targetLanguage}
-              onSourcePress={() => setOpenLanguageModal('source')}
-              onTargetPress={() => setOpenLanguageModal('target')}
-              onSwapPress={handleSwapLanguages}
+        <View className="flex-1 bg-black overflow-hidden">
+          {selectedImageUri ? (
+            <Image
+              source={{ uri: selectedImageUri }}
+              style={StyleSheet.absoluteFill}
+              resizeMode="cover"
+            />
+          ) : (
+            hasPermission && (
+              <CameraPreview isFlashlightOn={isFlashlightOn} isActive={isCameraActive} />
+            )
+          )}
+
+          <View pointerEvents="box-none" style={StyleSheet.absoluteFill} className="justify-between">
+            <View className="pt-4 items-center px-5">
+              <LanguageSelector
+                sourceLanguage={sourceLanguage}
+                targetLanguage={targetLanguage}
+                onSourcePress={() => setOpenLanguageModal('source')}
+                onTargetPress={() => setOpenLanguageModal('target')}
+                onSwapPress={handleSwapLanguages}
+              />
+            </View>
+
+            <CameraControls
+              onGalleryPress={handleGalleryPress}
+              onCapturePress={handleCapturePress}
+              onFlashlightPress={handleFlashlightPress}
+              isFlashlightOn={isFlashlightOn}
             />
           </View>
-
-          <CameraControls
-            onGalleryPress={handleGalleryPress}
-            onCapturePress={handleCapturePress}
-            onFlashlightPress={handleFlashlightPress}
-            isFlashlightOn={isFlashlightOn}
-          />
         </View>
       </View>
 
