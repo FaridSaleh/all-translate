@@ -89,7 +89,7 @@ const ImageScreen = () => {
     setIsFlashlightOn(current => !current)
   }
 
-  const isCameraActive = isFocused && hasPermission && !selectedImageUri
+  const isCameraActive = isFocused && hasPermission
 
   useEffect(() => {
     if (!selectedImageUri) {
@@ -105,20 +105,20 @@ const ImageScreen = () => {
         <ImageScreenHeader title={t('ImageScreen.title')} onClose={handleClose} />
 
         <View className="flex-1 bg-black overflow-hidden">
-          {selectedImageUri ? (
+          {hasPermission && (
+            <CameraPreview
+              ref={cameraPreviewRef}
+              isFlashlightOn={isFlashlightOn}
+              isActive={isCameraActive}
+            />
+          )}
+
+          {selectedImageUri && (
             <Image
               source={{ uri: selectedImageUri }}
               style={StyleSheet.absoluteFill}
               resizeMode="cover"
             />
-          ) : (
-            hasPermission && (
-              <CameraPreview
-                ref={cameraPreviewRef}
-                isFlashlightOn={isFlashlightOn}
-                isActive={isCameraActive}
-              />
-            )
           )}
 
           <View pointerEvents="box-none" style={StyleSheet.absoluteFill} className="justify-between">
