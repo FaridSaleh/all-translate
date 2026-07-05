@@ -13,3 +13,9 @@ export type TabBarIconComponentProps = {
 }
 
 export type LanguageType = ConfigurationDto['supportedLanguages'][0]
+
+export type HomeTabParamList = {
+  TranslationsTab: undefined
+  ConversationTab: undefined
+  ImageTab: undefined
+}

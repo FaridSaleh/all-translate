@@ -35,6 +35,10 @@
 	<string/>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>This app needs access to microphone for speech-to-text functionality</string>
+	<key>NSCameraUsageDescription</key>
+	<string>We use Photo Library to scan texts.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>We use Photo Library to scan texts.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>This app needs access to speech recognition for voice input</string>
 	<key>RCTNewArchEnabled</key>

@@ -2,7 +2,7 @@ import React, { useEffect } from 'react'
 import { Keyboard, Modal as RNModal, View } from 'react-native'
 import ModalProps from './type'
 
-const Modal = ({ children, isOpen, setIsOpen }: ModalProps) => {
+const Modal = ({ children, isOpen, setIsOpen, contentClassName }: ModalProps) => {
   useEffect(() => {
     if (isOpen) {
       Keyboard.dismiss()
@@ -17,7 +17,9 @@ const Modal = ({ children, isOpen, setIsOpen }: ModalProps) => {
       onRequestClose={() => setIsOpen(false)}
     >
       <View className="flex-1 bg-[#1B1F26B8] justify-center items-center p-4">
-        <View className="bg-bg-card rounded-2xl shadow-lg w-full">{children}</View>
+        <View className={`bg-bg-card rounded-2xl shadow-lg w-full ${contentClassName ?? ''}`}>
+          {children}
+        </View>
       </View>
     </RNModal>
   )

@@ -52,6 +52,21 @@
       "description_2": "Upgrade to access <bold>Premium voice</bold>, and more features."
     }
   },
+  "ImageScreen": {
+    "title": "Camera",
+    "camera_access": {
+      "title": "\"All Translate\" would like to access Your Camera",
+      "description": "We use Photo Library to scan texts.",
+      "allow": "Allow Access",
+      "deny": "Don't Allow"
+    },
+    "photo_library_access": {
+      "title": "\"All Translate\" would like to access Your Photos",
+      "description": "We use Photo Library to scan texts.",
+      "select_more": "Select More Photos",
+      "keep_current": "Keep Current Selection"
+    }
+  },
   "ConversationScreen": {
     "view": {
       "title": "View",

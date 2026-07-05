@@ -73,7 +73,8 @@ const HomeTabs = () => {
         options={{
           tabBarLabel: t('HomeScreen.camera'),
           tabBarIcon: ({ color }) => makeTabIcon(CameraIcon)({ color, width: 22, height: 17 }),
-          header: () => <Header title={t('HomeScreen.camera')} />,
+          headerShown: false,
+          tabBarStyle: { display: 'none' },
         }}
       />
     </Tab.Navigator>
