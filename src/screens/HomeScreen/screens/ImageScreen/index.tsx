@@ -1,9 +1,10 @@
 import { useCallback, useState } from 'react'
-import { View } from 'react-native'
+import { Image, StyleSheet, View } from 'react-native'
 import { useCameraPermission } from 'react-native-vision-camera'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
-import { useFocusEffect, useNavigation } from '@react-navigation/native'
+import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
+import useImageLibraryPicker from '../../../../hooks/useImageLibraryPicker'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import { HomeTabParamList, LanguageType } from '../../type'
 import CameraAccessModal from './components/CameraAccessModal'
@@ -11,11 +12,11 @@ import CameraControls from './components/CameraControls'
 import CameraPreview from './components/CameraPreview'
 import ImageScreenHeader from './components/ImageScreenHeader'
 import LanguageSelector from './components/LanguageSelector'
-import PhotoLibraryAccessModal from './components/PhotoLibraryAccessModal'
 
 const ImageScreen = () => {
   const { t } = useTranslation()
   const navigation = useNavigation<BottomTabNavigationProp<HomeTabParamList>>()
+  const isFocused = useIsFocused()
   const { hasPermission, requestPermission } = useCameraPermission()
 
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
@@ -25,22 +26,18 @@ const ImageScreen = () => {
   })
   const [targetLanguage, setTargetLanguage] = useState<LanguageType>({ id: 'es', name: 'Spanish' })
   const [isCameraAccessOpen, setIsCameraAccessOpen] = useState(false)
-  const [isPhotoLibraryAccessOpen, setIsPhotoLibraryAccessOpen] = useState(false)
   const [isFlashlightOn, setIsFlashlightOn] = useState(false)
   const [hasShownCameraPrompt, setHasShownCameraPrompt] = useState(false)
-  const [isScreenFocused, setIsScreenFocused] = useState(false)
+  const { selectedImageUri, openGallery } = useImageLibraryPicker()
 
   useFocusEffect(
     useCallback(() => {
-      setIsScreenFocused(true)
-
       if (!hasPermission && !hasShownCameraPrompt) {
         setIsCameraAccessOpen(true)
         setHasShownCameraPrompt(true)
       }
 
       return () => {
-        setIsScreenFocused(false)
         setIsFlashlightOn(false)
       }
     }, [hasPermission, hasShownCameraPrompt]),
@@ -56,7 +53,8 @@ const ImageScreen = () => {
   }
 
   const handleGalleryPress = () => {
-    setIsPhotoLibraryAccessOpen(true)
+    setIsCameraAccessOpen(false)
+    openGallery()
   }
 
   const handleCapturePress = () => {
@@ -66,7 +64,7 @@ const ImageScreen = () => {
   }
 
   const handleAllowCamera = async () => {
-    await requestPermission()
+    return requestPermission()
   }
 
   const handleDenyCamera = () => {
@@ -81,36 +79,43 @@ const ImageScreen = () => {
     setIsFlashlightOn(current => !current)
   }
 
+  const isCameraActive = isFocused && hasPermission
+
   return (
     <>
       <View className="flex-1 bg-black">
-        <View className="absolute inset-0">
-          {hasPermission && (
-            <CameraPreview
-              isFlashlightOn={isFlashlightOn}
-              isActive={isScreenFocused && hasPermission}
-            />
-          )}
-        </View>
+        {selectedImageUri ? (
+          <Image
+            source={{ uri: selectedImageUri }}
+            style={StyleSheet.absoluteFill}
+            resizeMode="cover"
+          />
+        ) : (
+          hasPermission && (
+            <CameraPreview isFlashlightOn={isFlashlightOn} isActive={isCameraActive} />
+          )
+        )}
 
         <ImageScreenHeader title={t('ImageScreen.title')} onClose={handleClose} />
 
-        <View className="absolute top-[108px] left-5 right-5 z-10 items-center">
-          <LanguageSelector
-            sourceLanguage={sourceLanguage}
-            targetLanguage={targetLanguage}
-            onSourcePress={() => setOpenLanguageModal('source')}
-            onTargetPress={() => setOpenLanguageModal('target')}
-            onSwapPress={handleSwapLanguages}
+        <View pointerEvents="box-none" style={StyleSheet.absoluteFill} className="justify-between">
+          <View className="pt-[108px] items-center px-5">
+            <LanguageSelector
+              sourceLanguage={sourceLanguage}
+              targetLanguage={targetLanguage}
+              onSourcePress={() => setOpenLanguageModal('source')}
+              onTargetPress={() => setOpenLanguageModal('target')}
+              onSwapPress={handleSwapLanguages}
+            />
+          </View>
+
+          <CameraControls
+            onGalleryPress={handleGalleryPress}
+            onCapturePress={handleCapturePress}
+            onFlashlightPress={handleFlashlightPress}
+            isFlashlightOn={isFlashlightOn}
           />
         </View>
-
-        <CameraControls
-          onGalleryPress={handleGalleryPress}
-          onCapturePress={handleCapturePress}
-          onFlashlightPress={handleFlashlightPress}
-          isFlashlightOn={isFlashlightOn}
-        />
       </View>
 
       <LanguageBottomSheet
@@ -127,13 +132,6 @@ const ImageScreen = () => {
         setIsOpen={setIsCameraAccessOpen}
         onAllow={handleAllowCamera}
         onDeny={handleDenyCamera}
-      />
-
-      <PhotoLibraryAccessModal
-        isOpen={isPhotoLibraryAccessOpen}
-        setIsOpen={setIsPhotoLibraryAccessOpen}
-        onSelectMore={() => {}}
-        onKeepCurrent={() => {}}
       />
     </>
   )

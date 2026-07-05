@@ -13,9 +13,11 @@ const CameraAccessModal = ({ isOpen, setIsOpen, onAllow, onDeny }: CameraAccessM
       description={t('ImageScreen.camera_access.description')}
       primaryAction={{
         label: t('ImageScreen.camera_access.allow'),
-        onPress: () => {
-          setIsOpen(false)
-          onAllow()
+        onPress: async () => {
+          const granted = await onAllow()
+          if (granted) {
+            setIsOpen(false)
+          }
         },
       }}
       secondaryAction={{

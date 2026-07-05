@@ -1,6 +1,6 @@
 export default interface CameraAccessModalProps {
   isOpen: boolean
   setIsOpen: (isOpen: boolean) => void
-  onAllow: () => void
+  onAllow: () => Promise<boolean>
   onDeny: () => void
 }

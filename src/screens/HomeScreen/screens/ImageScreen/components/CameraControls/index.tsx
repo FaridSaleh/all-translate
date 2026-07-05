@@ -31,7 +31,7 @@ const CameraControls = ({
           className="w-[60px] h-[60px] rounded-full border-[4px] border-white items-center justify-center overflow-hidden"
           onPress={onCapturePress}
         >
-          <View className="w-[50px] h-[50px] rounded-full bg-white" />
+          <View className="w-[50px] h-[50px] rounded-full bg-[#fff]" />
         </RipplePressable>
       </View>
 
