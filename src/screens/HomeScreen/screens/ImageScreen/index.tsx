@@ -1,15 +1,16 @@
-import { useCallback, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import { Image, StyleSheet, View } from 'react-native'
 import { useCameraPermission } from 'react-native-vision-camera'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
 import { useTranslation } from 'react-i18next'
 import useImageLibraryPicker from '../../../../hooks/useImageLibraryPicker'
+import useImageOcr from '../../../../hooks/useImageOcr'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import { HomeTabParamList, LanguageType } from '../../type'
 import CameraAccessModal from './components/CameraAccessModal'
 import CameraControls from './components/CameraControls'
-import CameraPreview from './components/CameraPreview'
+import CameraPreview, { CameraPreviewRef } from './components/CameraPreview'
 import ImageScreenHeader from './components/ImageScreenHeader'
 import LanguageSelector from './components/LanguageSelector'
 
@@ -28,7 +29,9 @@ const ImageScreen = () => {
   const [isCameraAccessOpen, setIsCameraAccessOpen] = useState(false)
   const [isFlashlightOn, setIsFlashlightOn] = useState(false)
   const [hasShownCameraPrompt, setHasShownCameraPrompt] = useState(false)
-  const { selectedImageUri, openGallery } = useImageLibraryPicker()
+  const cameraPreviewRef = useRef<CameraPreviewRef>(null)
+  const { selectedImageUri, setSelectedImageUri, openGallery } = useImageLibraryPicker()
+  const { recognizeTextInImage } = useImageOcr()
 
   useFocusEffect(
     useCallback(() => {
@@ -57,9 +60,16 @@ const ImageScreen = () => {
     openGallery()
   }
 
-  const handleCapturePress = () => {
+  const handleCapturePress = async () => {
     if (!hasPermission) {
       setIsCameraAccessOpen(true)
+      return
+    }
+
+    const imageUri = await cameraPreviewRef.current?.takePhoto()
+
+    if (imageUri) {
+      setSelectedImageUri(imageUri)
     }
   }
 
@@ -79,7 +89,15 @@ const ImageScreen = () => {
     setIsFlashlightOn(current => !current)
   }
 
-  const isCameraActive = isFocused && hasPermission
+  const isCameraActive = isFocused && hasPermission && !selectedImageUri
+
+  useEffect(() => {
+    if (!selectedImageUri) {
+      return
+    }
+
+    recognizeTextInImage(selectedImageUri, sourceLanguage.id)
+  }, [selectedImageUri, sourceLanguage.id, recognizeTextInImage])
 
   return (
     <>
@@ -95,7 +113,11 @@ const ImageScreen = () => {
             />
           ) : (
             hasPermission && (
-              <CameraPreview isFlashlightOn={isFlashlightOn} isActive={isCameraActive} />
+              <CameraPreview
+                ref={cameraPreviewRef}
+                isFlashlightOn={isFlashlightOn}
+                isActive={isCameraActive}
+              />
             )
           )}
 

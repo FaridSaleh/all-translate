@@ -1697,10 +1697,15 @@
     prompts "^2.4.2"
     semver "^7.5.2"
 
-"@react-native-community/slider@^5.0.1":
-  version "5.1.1"
-  resolved "https://registry.npmjs.org/@react-native-community/slider/-/slider-5.1.1.tgz"
-  integrity sha512-W98If/LnTaziU3/0h5+G1LvJaRhMc6iLQBte6UWa4WBIHDMaDPglNBIFKcCXc9Dxp83W+f+5Wv22Olq9M2HJYA==
+"@react-native-community/slider@^5.2.0":
+  version "5.2.0"
+  resolved "https://registry.npmjs.org/@react-native-community/slider/-/slider-5.2.0.tgz"
+  integrity sha512-484sH8aWEaSjxaZ7HT3YZ8CKDcNes2synko1vdEz5DFEdvKAduxKJTj22L/qBMD7rtIkfbX69DMzWDAGbOAV6w==
+
+"@react-native-ml-kit/text-recognition@^2.0.0":
+  version "2.0.0"
+  resolved "https://registry.npmjs.org/@react-native-ml-kit/text-recognition/-/text-recognition-2.0.0.tgz"
+  integrity sha512-RHefLYKndSyoDtgqHQptYQe+mftFk6/H30IQDenKX7PgMlJqoDejX+HdZ8gnP1kVNAt3iH+wyl/P6vCOkLMW9Q==
 
 "@react-native-voice/voice@^3.2.4":
   version "3.2.4"
@@ -6650,17 +6655,17 @@ react-native-nitro-image@*, react-native-nitro-image@^0.15.1:
   resolved "https://registry.npmjs.org/react-native-nitro-image/-/react-native-nitro-image-0.15.1.tgz"
   integrity sha512-slrImfUgasAdzylTiNWuTkawE0R4t7LGh+7N2VFa/D9+SxlQbkKYp1J6hA3XkkEnTnUCKaea39ZVg+1xx665MQ==
 
-react-native-nitro-modules@*, react-native-nitro-modules@^0.36.1:
+react-native-nitro-modules@*, react-native-nitro-modules@^0.36.1, react-native-nitro-modules@>=0.35.4:
   version "0.36.1"
   resolved "https://registry.npmjs.org/react-native-nitro-modules/-/react-native-nitro-modules-0.36.1.tgz"
   integrity sha512-kBv/VvKqAmkXAvP1DxJMC9b/fRhh7JdSO4EUnPP46hJjrIFeFR8AwKm8mYaKZEuF014M/TVdv2vomVUW0umsQQ==
 
-react-native-nitro-sound@^0.2.9:
-  version "0.2.9"
-  resolved "https://registry.npmjs.org/react-native-nitro-sound/-/react-native-nitro-sound-0.2.9.tgz"
-  integrity sha512-shlDKr5riTqqhnh42H0NynZmtzrR6JWqZ7m1yVBfY9B43d4DvD2MdhhLjpvaZwnMefGM5gYrVPN/6YBjcF1RMg==
+react-native-nitro-sound@^0.2.15:
+  version "0.2.15"
+  resolved "https://registry.npmjs.org/react-native-nitro-sound/-/react-native-nitro-sound-0.2.15.tgz"
+  integrity sha512-l2EGPSPB/BJUaq8tEmvIUh8VkfEIl23ol/5zAZmseTRRkVMfDQSuTw2Wu/9+RmcTlJLUjARN5gHR7P5OwdHSDA==
   dependencies:
-    "@react-native-community/slider" "^5.0.1"
+    "@react-native-community/slider" "^5.2.0"
 
 react-native-reanimated@^4.1.2, "react-native-reanimated@>=3.16.0 || >=4.0.0-", react-native-reanimated@>=3.6.2:
   version "4.1.2"
@@ -6730,7 +6735,7 @@ react-native-worklets@^0.6.0, react-native-worklets@>=0.5.0:
     convert-source-map "^2.0.0"
     semver "7.7.2"
 
-react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", "react-native@>= 0.60.2", "react-native@>= 0.61.5", react-native@>=0.40.0, react-native@>=0.56, react-native@>=0.59.0, react-native@0.81.4:
+react-native@*, "react-native@^0.0.0-0 || >=0.65 <1.0", "react-native@>= 0.60.2", "react-native@>= 0.61.5", react-native@>=0.40.0, react-native@>=0.56, react-native@>=0.59.0, "react-native@>=0.60.0-rc.0 <1.0.x", react-native@0.81.4:
   version "0.81.4"
   resolved "https://registry.npmjs.org/react-native/-/react-native-0.81.4.tgz"
   integrity sha512-bt5bz3A/+Cv46KcjV0VQa+fo7MKxs17RCcpzjftINlen4ZDUl0I6Ut+brQ2FToa5oD0IB0xvQHfmsg2EDqsZdQ==
@@ -6783,7 +6788,7 @@ react-test-renderer@19.1.0:
     react-is "^19.1.0"
     scheduler "^0.26.0"
 
-react@*, "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^18 || ^19", react@^19.1.0, "react@>= 16.8.0", "react@>= 16.9.0", "react@>= 18.2.0", react@>=16.8, react@>=17.0.0, react@>=18, react@>=18.0.0, react@19.1.0:
+react@*, "react@^16.8.0 || ^17.0.0 || ^18.0.0 || ^19.0.0", "react@^18 || ^19", react@^19.1.0, "react@>= 16.8.0", "react@>= 16.9.0", "react@>= 18.2.0", react@>=16.8, react@>=16.8.1, react@>=17.0.0, react@>=18, react@>=18.0.0, react@19.1.0:
   version "19.1.0"
   resolved "https://registry.npmjs.org/react/-/react-19.1.0.tgz"
   integrity sha512-FS+XFBNvn3GTAWq26joslQgWNoFu08F4kl0J4CgdNKADkdSGXQyTCnKteIAJy96Br6YbpEU1LSzV5dYtjMkMDg==

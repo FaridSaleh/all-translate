@@ -53,6 +53,7 @@ const useImageLibraryPicker = (): UseImageLibraryPickerDto => {
 
   return {
     selectedImageUri,
+    setSelectedImageUri,
     openGallery,
     clearSelectedImage,
   }
