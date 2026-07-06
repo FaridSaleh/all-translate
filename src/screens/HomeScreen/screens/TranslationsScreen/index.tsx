@@ -18,6 +18,8 @@ import { mapSpeechToTextResult } from '@/utils/mapSpeechToTextResult'
 
 const scrollContentStyle = { flexGrow: 1 }
 
+const KEYBOARD_ACCESSORY_GAP = 16
+
 const TranslationsScreen = () => {
   const { t } = useTranslation()
   const sourceLanguageInputRef = useRef<SourceLanguageRef>(null)
@@ -58,6 +60,7 @@ const TranslationsScreen = () => {
   const isKeyboardVisible = keyboardHeight > 0
   const showActionButtons = sourceText.length > 0 && !isCurrentlyListening
   const pinActionButtonsAboveKeyboard = showActionButtons && isKeyboardVisible
+  const keyboardAccessoryBottom = isKeyboardVisible ? keyboardHeight + KEYBOARD_ACCESSORY_GAP : 0
 
   useEffect(() => {
     const showEvent = Platform.OS === 'ios' ? 'keyboardWillShow' : 'keyboardDidShow'
@@ -169,16 +172,29 @@ const TranslationsScreen = () => {
     }
   }
 
-  const renderActionButtons = () => (
+  const renderKeyboardDismissButton = () => (
+    <RipplePressable
+      borderless
+      className="w-[36px] h-[36px] bg-bg-base rounded-full items-center justify-center overflow-hidden"
+      onPress={handleDismissKeyboard}
+    >
+      <KeyboardDismissIcon width={28} height={20} color="#1D4ED8" />
+    </RipplePressable>
+  )
+
+  const renderActionButtons = (withKeyboardDismiss = false) => (
     <View className="flex-row items-center justify-between">
-      <RipplePressable
-        className="justify-center rounded-[6px] p-[6px] overflow-hidden"
-        onPress={clearTexts}
-      >
-        <Text className="text-[16px] font-regular text-primary-main text-center">
-          {t('TranslationsScreen.clear')}
-        </Text>
-      </RipplePressable>
+      <View className="flex-row items-center gap-3">
+        {withKeyboardDismiss && renderKeyboardDismissButton()}
+        <RipplePressable
+          className="justify-center rounded-[6px] p-[6px] overflow-hidden"
+          onPress={clearTexts}
+        >
+          <Text className="text-[16px] font-regular text-primary-main text-center">
+            {t('TranslationsScreen.clear')}
+          </Text>
+        </RipplePressable>
+      </View>
       <RipplePressable
         rippleColor="rgba(255, 255, 255, 0.3)"
         className={`justify-center bg-primary-main rounded-[6px] p-[6px] overflow-hidden ${isTranslating ? 'opacity-50' : ''}`}
@@ -256,28 +272,28 @@ const TranslationsScreen = () => {
                 </>
               )}
             </View>
-
-            <View className="mt-4 ml-4" pointerEvents={isKeyboardVisible ? 'auto' : 'none'}>
-              <RipplePressable
-                borderless
-                className={`w-[36px] h-[36px] bg-bg-base rounded-full items-center justify-center overflow-hidden ${isKeyboardVisible ? 'opacity-100' : 'opacity-0'}`}
-                onPress={handleDismissKeyboard}
-              >
-                <KeyboardDismissIcon width={28} height={20} color="#1D4ED8" />
-              </RipplePressable>
-            </View>
           </ScrollView>
 
           {pinActionButtonsAboveKeyboard && (
             <View
-              className="px-4 pt-3 pb-3 bg-bg-card rounded-2xl border-t border-bg-buttonDisabled"
-              style={{ marginBottom: keyboardHeight }}
+              className="absolute left-6 right-6 z-10 px-4 pt-3 pb-3 bg-bg-card rounded-2xl border-t border-bg-buttonDisabled"
+              style={{ bottom: keyboardAccessoryBottom }}
+              pointerEvents="box-none"
             >
-              {renderActionButtons()}
+              {renderActionButtons(true)}
             </View>
           )}
 
-          <View className="pb-[40px] items-center h-[60px]">
+          {isKeyboardVisible && !showActionButtons && (
+            <View className="absolute left-6 z-10" style={{ bottom: keyboardAccessoryBottom }}>
+              {renderKeyboardDismissButton()}
+            </View>
+          )}
+
+          <View
+            className={`pb-[40px] items-center h-[60px] ${isKeyboardVisible ? 'opacity-0' : ''}`}
+            pointerEvents={isKeyboardVisible ? 'none' : 'auto'}
+          >
             <RipplePressable
               rippleColor="rgba(255, 255, 255, 0.3)"
               className={`w-[55px] h-[55px] justify-center items-center bg-primary-main rounded-full overflow-hidden ${isCurrentlyListening ? 'opacity-100' : 'opacity-0'}`}

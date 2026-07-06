@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import { Keyboard, Platform, ScrollView, View } from 'react-native'
+import { useBottomTabBarHeight } from '@react-navigation/bottom-tabs'
 import GradientLayout from '../../components/GradientLayout'
 import LanguageBottomSheet from '../../components/LanguageBottomSheet'
 import { LanguageType } from '../../type'
@@ -16,6 +17,7 @@ import { mapSpeechToTextResult } from '@/utils/mapSpeechToTextResult'
 const scrollContentStyle = { flexGrow: 1 }
 
 const ConversationScreen = () => {
+  const tabBarHeight = useBottomTabBarHeight()
   const [isConversationModalOpen, setIsConversationModalOpen] = useState(false)
   const [openLanguageModal, setOpenLanguageModal] = useState<'source' | 'target' | false>(false)
   const [sourceLanguage, setSourceLanguage] = useState<LanguageType>({
@@ -49,17 +51,16 @@ const ConversationScreen = () => {
     }
   }, [])
 
-  const micButtonContainerStyle = {
-    paddingBottom: keyboardHeight > 0 ? 16 : 40,
-    marginBottom: keyboardHeight,
-  }
+  const isKeyboardVisible = keyboardHeight > 0
+
+  const micButtonContainerStyle = isKeyboardVisible
+    ? { paddingBottom: 16, marginBottom: keyboardHeight }
+    : { paddingBottom: 16, marginBottom: tabBarHeight }
 
   const scrollContentContainerStyle = [
     scrollContentStyle,
     keyboardHeight > 0 ? { paddingBottom: 16 } : null,
   ]
-
-  const isKeyboardVisible = keyboardHeight > 0
 
   const handleDismissKeyboard = () => {
     Keyboard.dismiss()

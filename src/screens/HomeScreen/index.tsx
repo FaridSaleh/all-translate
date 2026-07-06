@@ -25,23 +25,29 @@ const HomeTabs = () => {
   const { t } = useTranslation()
   const insets = useSafeAreaInsets()
   const androidTabBarBottomInset = Math.max(insets.bottom, 16)
+  const tabBarHeight =
+    Platform.OS === 'android' ? 56 + androidTabBarBottomInset : 49 + insets.bottom
 
   return (
     <Tab.Navigator
       screenOptions={{
         title: t('HomeScreen.title'),
+        tabBarHideOnKeyboard: false,
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: 'medium',
         },
         tabBarStyle: {
-          marginHorizontal: 20,
+          position: 'absolute',
+          left: 20,
+          right: 20,
+          bottom: 0,
           borderTopWidth: 1,
           borderTopColor: '#4B5563',
           shadowColor: 'transparent',
           ...(Platform.OS === 'android' && {
             paddingBottom: androidTabBarBottomInset,
-            height: 56 + androidTabBarBottomInset,
+            height: tabBarHeight,
           }),
         },
       }}
