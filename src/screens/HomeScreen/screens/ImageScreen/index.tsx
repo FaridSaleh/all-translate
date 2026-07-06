@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useRef, useState } from 'react'
-import { Image, StyleSheet, View } from 'react-native'
+import { Image, LayoutChangeEvent, StyleSheet, View } from 'react-native'
 import { useCameraPermission } from 'react-native-vision-camera'
 import { BottomTabNavigationProp } from '@react-navigation/bottom-tabs'
 import { useFocusEffect, useIsFocused, useNavigation } from '@react-navigation/native'
@@ -12,7 +12,13 @@ import CameraAccessModal from './components/CameraAccessModal'
 import CameraControls from './components/CameraControls'
 import CameraPreview, { CameraPreviewRef } from './components/CameraPreview'
 import ImageScreenHeader from './components/ImageScreenHeader'
+import ImageTranslationPreview from './components/ImageTranslationPreview'
 import LanguageSelector from './components/LanguageSelector'
+import {
+  mapOcrToImageTranslateRequest,
+  PostImageToTextDto,
+  useImageToTextRequest,
+} from '@/apis/translate/imageToText'
 
 const ImageScreen = () => {
   const { t } = useTranslation()
@@ -29,9 +35,12 @@ const ImageScreen = () => {
   const [isCameraAccessOpen, setIsCameraAccessOpen] = useState(false)
   const [isFlashlightOn, setIsFlashlightOn] = useState(false)
   const [hasShownCameraPrompt, setHasShownCameraPrompt] = useState(false)
+  const [translationResult, setTranslationResult] = useState<PostImageToTextDto | null>(null)
+  const [previewLayout, setPreviewLayout] = useState({ width: 0, height: 0 })
   const cameraPreviewRef = useRef<CameraPreviewRef>(null)
   const { selectedImageUri, setSelectedImageUri, openGallery } = useImageLibraryPicker()
   const { recognizeTextInImage } = useImageOcr()
+  const { mutate: translateImage } = useImageToTextRequest()
 
   useFocusEffect(
     useCallback(() => {
@@ -91,20 +100,56 @@ const ImageScreen = () => {
 
   const isCameraActive = isFocused && hasPermission
 
+  const handlePreviewLayout = useCallback((event: LayoutChangeEvent) => {
+    const { width, height } = event.nativeEvent.layout
+    setPreviewLayout({ width, height })
+  }, [])
+
   useEffect(() => {
     if (!selectedImageUri) {
+      setTranslationResult(null)
       return
     }
 
-    recognizeTextInImage(selectedImageUri, sourceLanguage.id)
-  }, [selectedImageUri, sourceLanguage.id, recognizeTextInImage])
+    setTranslationResult(null)
+    let isCancelled = false
+
+    const runOcrAndTranslate = async () => {
+      const ocrResult = await recognizeTextInImage(selectedImageUri, sourceLanguage.id)
+
+      if (!ocrResult || isCancelled) {
+        return
+      }
+
+      translateImage(
+        mapOcrToImageTranslateRequest(ocrResult, sourceLanguage.id, targetLanguage.id),
+        {
+          onSuccess: data => {
+            if (!isCancelled) {
+              setTranslationResult(data)
+              console.log('[ImageTranslate] API result:', data)
+            }
+          },
+          onError: error => {
+            console.error('[ImageTranslate] API failed:', error)
+          },
+        },
+      )
+    }
+
+    runOcrAndTranslate()
+
+    return () => {
+      isCancelled = true
+    }
+  }, [selectedImageUri, sourceLanguage.id, targetLanguage.id, recognizeTextInImage, translateImage])
 
   return (
     <>
       <View className="flex-1 bg-bg-card">
         <ImageScreenHeader title={t('ImageScreen.title')} onClose={handleClose} />
 
-        <View className="flex-1 bg-black overflow-hidden">
+        <View className="flex-1 bg-black overflow-hidden" onLayout={handlePreviewLayout}>
           {hasPermission && (
             <CameraPreview
               ref={cameraPreviewRef}
@@ -113,15 +158,28 @@ const ImageScreen = () => {
             />
           )}
 
-          {selectedImageUri && (
-            <Image
-              source={{ uri: selectedImageUri }}
-              style={StyleSheet.absoluteFill}
-              resizeMode="cover"
+          {selectedImageUri && translationResult ? (
+            <ImageTranslationPreview
+              imageUri={selectedImageUri}
+              result={translationResult}
+              viewWidth={previewLayout.width}
+              viewHeight={previewLayout.height}
             />
+          ) : (
+            selectedImageUri && (
+              <Image
+                source={{ uri: selectedImageUri }}
+                style={StyleSheet.absoluteFill}
+                resizeMode="contain"
+              />
+            )
           )}
 
-          <View pointerEvents="box-none" style={StyleSheet.absoluteFill} className="justify-between">
+          <View
+            pointerEvents="box-none"
+            style={StyleSheet.absoluteFill}
+            className="justify-between"
+          >
             <View className="pt-4 items-center px-5">
               <LanguageSelector
                 sourceLanguage={sourceLanguage}
